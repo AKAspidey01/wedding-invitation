@@ -12,11 +12,11 @@
 export const weddingConfig = {
   couple: {
     bride: {
-      name: 'Bride', // ⟵ PLACEHOLDER  short display name (shown in script type)
+      name: 'Asha', // ⟵ PLACEHOLDER  short display name (shown in script type)
       fullName: '', // optional, e.g. "Chi. La. Sow. …"
     },
     groom: {
-      name: 'Groom', // ⟵ PLACEHOLDER
+      name: 'Anil', // ⟵ PLACEHOLDER
       fullName: '',
     },
     /** Order in which the names appear on the cards. */
@@ -59,16 +59,20 @@ export const weddingConfig = {
   countdownEventId: 'marriage',
 
   venue: {
-    name: 'Banquet Hall Name', // ⟵ PLACEHOLDER
-    city: 'City', // ⟵ PLACEHOLDER
-    address: '', // ⟵ PLACEHOLDER  full postal address
-    /** { lat: 17.385, lng: 78.4867 } — preferred for the map pin & directions. */
-    coordinates: null, // ⟵ PLACEHOLDER
+    // From the Google Maps link https://maps.app.goo.gl/dW8NhW2FWvGFcV156
+    name: 'Sreerastu Convention',
+    city: 'Kakinada',
+    address: '10-5-29, Nageswara Rao St, Rama Rao Peta, Kakinada, Andhra Pradesh 533004',
+    /** Exact pin of the place on Google Maps — used for directions. */
+    coordinates: { lat: 16.9615672, lng: 82.22812 },
     /**
      * Optional: a full Google Maps embed URL ("Share → Embed a map → src").
      * If empty, the embed is built from coordinates or address.
+     * Set to the named place so the map shows "Sreerastu convention" with its
+     * address card, rather than an unlabelled coordinate pin.
      */
-    mapEmbedUrl: '',
+    mapEmbedUrl:
+      'https://www.google.com/maps?q=Sreerastu+Convention,+10-5-29,+Nageswara+Rao+St,+Rama+Rao+Peta,+Kakinada,+Andhra+Pradesh+533004&z=17&output=embed',
     /**
      * Banquet hall photograph used as the venue background.
      * Drop the file into /public/images/venue/ and set the paths, e.g.
