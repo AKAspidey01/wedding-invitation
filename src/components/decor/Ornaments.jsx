@@ -178,15 +178,16 @@ export function WaxSeal({ className = '' }) {
         <path key={i} d={petal(33.5, 6, 2.2)} transform={`rotate(${i * 22.5})`} fill="#6d2235" fillOpacity="0.3" />
       ))}
       <path d="M-30-22A38 38 0 0 1 12-37" fill="none" stroke="#fff" strokeOpacity="0.28" strokeWidth="2.5" strokeLinecap="round" />
-      <g fontFamily="'Great Vibes', cursive" textAnchor="middle">
+      {/* initials in Parisienne (clear capital A); the "&" keeps Great Vibes */}
+      <g fontFamily="'Parisienne', 'Great Vibes', cursive" textAnchor="middle">
         <text x="0.8" y="9.8" fontSize="30" fill="#5f1f30" fillOpacity="0.55">
           {a}
-          <tspan fontSize="17" dy="-3">&amp;</tspan>
+          <tspan fontFamily="'Great Vibes', cursive" fontSize="17" dy="-3">&amp;</tspan>
           <tspan dy="3">{b}</tspan>
         </text>
         <text x="0" y="9" fontSize="30" fill="#f6d3cf">
           {a}
-          <tspan fontSize="17" dy="-3">&amp;</tspan>
+          <tspan fontFamily="'Great Vibes', cursive" fontSize="17" dy="-3">&amp;</tspan>
           <tspan dy="3">{b}</tspan>
         </text>
       </g>

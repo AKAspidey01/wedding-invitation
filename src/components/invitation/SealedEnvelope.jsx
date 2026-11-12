@@ -124,7 +124,7 @@ export function EnvelopePocket() {
       <div className="env-pocket__address">
         <span>An invitation from</span>
         <strong>
-          {a} &amp; {b}
+          {a} <span>&amp;</span> {b}
         </strong>
       </div>
     </div>

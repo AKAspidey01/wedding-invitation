@@ -20,6 +20,9 @@ $ink-soft: #7d6149;
 // ─── Type ───
 $font-serif: 'Cormorant Garamond', 'Times New Roman', serif;
 $font-script: 'Great Vibes', 'Cormorant Garamond', cursive;
+// Bride & groom names and initials — Parisienne has a clear capital "A"
+// (Great Vibes' looks like a lowercase a)
+$font-names: 'Parisienne', $font-script;
 $font-caps: 'Cinzel', 'Cormorant Garamond', serif;
 $font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
 $font-deva: 'Noto Serif Devanagari', 'Noto Serif Telugu', serif;

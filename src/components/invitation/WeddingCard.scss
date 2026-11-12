@@ -255,8 +255,7 @@
 
   &__name {
     display: block;
-    // Parisienne: a clear capital "A" (Great Vibes' looks like a lowercase a)
-    font-family: 'Parisienne', $font-script;
+    font-family: $font-names;
     font-size: 14cqw;
     line-height: 1.12;
     color: $rose-deep;
@@ -424,7 +423,7 @@
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    font-family: $font-script;
+    font-family: $font-names;
     font-size: 30cqw;
     color: $rose-deep;
 
