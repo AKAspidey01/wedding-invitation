@@ -60,9 +60,9 @@ export function Toran({ className = '', count = 13 }) {
               <g transform={`translate(${x + 15} 6)`}>
                 <g className="sway" style={{ animationDelay: `${(i % 4) * -1.1}s`, animationDuration: '5.6s' }}>
                   <path d="M0 0V30" stroke="#b9873c" strokeWidth="0.6" />
-                  <Marigold y={9} s={0.36} bloom="" />
-                  <Marigold y={20} s={0.3} yellow bloom="" />
-                  <Marigold y={29} s={0.26} bloom="" />
+                  <Marigold y={9} s={0.36} bloom="" lite />
+                  <Marigold y={20} s={0.3} yellow bloom="" lite />
+                  <Marigold y={29} s={0.26} bloom="" lite />
                 </g>
               </g>
             )}
@@ -208,7 +208,7 @@ export function GarlandSwag({ className = '' }) {
         i % 6 === 3 ? (
           <MangoLeaf key={i} x={x} y={y} s={0.42} r={i < 11 ? -150 : 150} />
         ) : (
-          <Marigold key={i} x={x} y={y} s={0.36} yellow={i % 3 === 1} bloom="" />
+          <Marigold key={i} x={x} y={y} s={0.36} yellow={i % 3 === 1} bloom="" lite />
         ),
       )}
     </svg>

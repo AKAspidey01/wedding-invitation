@@ -104,15 +104,28 @@
     height: 34cqw;
     z-index: 3;
 
+    .floral-cluster {
+      width: 100%;
+      height: 100%;
+    }
+
     &--bl {
       left: -2cqw;
       bottom: -2cqw;
-      transform: scaleY(-1);
+      transform-origin: 0% 100%;
+
+      .floral-cluster {
+        transform: scaleY(-1);
+      }
     }
     &--br {
       right: -2cqw;
       bottom: -2cqw;
-      transform: scale(-1, -1);
+      transform-origin: 100% 100%;
+
+      .floral-cluster {
+        transform: scale(-1, -1);
+      }
     }
   }
 
@@ -213,6 +226,14 @@
   }
 }
 
+// Bouquets and watermark animate in the reveal — own GPU layers, so their
+// motion never repaints the card. (Chrome re-rasterises these sharply if the
+// card grows, e.g. the closing card flying in — verified.)
+.wcard__flora,
+.wcard__watermark {
+  will-change: transform;
+}
+
 /* ───────── Couple names ───────── */
 .couple-names {
   display: flex;
@@ -277,6 +298,7 @@
   bottom: 0;
   width: 50%;
   backface-visibility: hidden;
+  will-change: transform; // swings open in 3D — rasterise the door art once
 
   &--l {
     left: 0;

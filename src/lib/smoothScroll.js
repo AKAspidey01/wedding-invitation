@@ -13,7 +13,9 @@ let locks = 0;
 export function initSmoothScroll() {
   if (prefersReducedMotion()) return () => {};
 
-  lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.9 });
+  // lerp 0.1 = smooth but responsive; lower values felt floaty/laggy with the
+  // scrubbed scenes on top. Touch devices keep native momentum scrolling.
+  lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
   lenis.on('scroll', ScrollTrigger.update);
   const raf = (time) => lenis?.raf(time * 1000);
   gsap.ticker.add(raf);

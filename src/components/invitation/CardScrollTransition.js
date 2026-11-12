@@ -1,8 +1,30 @@
-import { gsap } from '../../lib/gsap';
+import { gsap, ScrollTrigger } from '../../lib/gsap';
+
+export const FLIGHT_LENGTH = '+=190%';
+
+/**
+ * Pins the opening scene for the length of the flight. Created when the page
+ * loads (not when the opening finishes) so the page layout — including the
+ * extra scroll room — is final from the start, and finishing the opening
+ * never triggers a page-wide ScrollTrigger re-measure (that caused a long
+ * freeze right as the card finished revealing).
+ */
+export function pinOpeningScene(section, pinSpacer) {
+  return ScrollTrigger.create({
+    trigger: section,
+    start: 'top top',
+    end: FLIGHT_LENGTH,
+    pin: true,
+    // our own wrapper, already in the DOM — ScrollTrigger needn't re-parent the scene
+    pinSpacer,
+    anticipatePin: 1,
+  });
+}
 
 /**
  * Scene 3 — scroll-scrubbed: the card floats away from the viewer into a
- * bright, dreamy distance. Fully reversible; pinned for a long scroll.
+ * bright, dreamy distance. Fully reversible. Built only after the opening,
+ * so its tweens start from the *revealed* state. `trigger` is the pin wrapper.
  */
 export function buildCardFlight(trigger, q) {
   const tl = gsap.timeline({
@@ -10,12 +32,10 @@ export function buildCardFlight(trigger, q) {
     scrollTrigger: {
       trigger,
       start: 'top top',
-      end: '+=190%',
-      pin: true,
-      scrub: 1.1,
-      anticipatePin: 1,
-      // created after the later sections' triggers → must be measured first
-      refreshPriority: 10,
+      end: FLIGHT_LENGTH,
+      // light smoothing only — Lenis already smooths the scroll itself, and
+      // stacking two long lags made the flight feel stuck behind the finger
+      scrub: 0.5,
     },
   });
 
@@ -29,9 +49,10 @@ export function buildCardFlight(trigger, q) {
     // the light it travels into grows warm and wide
     .to(q('.io-glow'), { scale: 3.2, autoAlpha: 1, duration: 1, ease: 'power1.in' }, 0)
     .to(q('.io-mandala'), { scale: 1.7, rotation: 40, autoAlpha: 0.25, duration: 1 }, 0)
-    // foreground florals drift outward past the camera
-    .to(q('.io-flora--tl'), { xPercent: -70, yPercent: -40, scale: 1.4, autoAlpha: 0, duration: 0.7, ease: 'power1.in' }, 0.1)
-    .to(q('.io-flora--br'), { xPercent: 70, yPercent: 40, scale: 1.4, autoAlpha: 0, duration: 0.7, ease: 'power1.in' }, 0.1)
+    // foreground florals drift outward past the camera (no scale-up: they're
+    // pre-rasterised GPU layers and would soften if enlarged)
+    .to(q('.io-flora--tl'), { xPercent: -80, yPercent: -50, rotation: -10, autoAlpha: 0, duration: 0.7, ease: 'power1.in' }, 0.1)
+    .to(q('.io-flora--br'), { xPercent: 80, yPercent: 50, rotation: 10, autoAlpha: 0, duration: 0.7, ease: 'power1.in' }, 0.1)
     .to(q('.io-toran'), { yPercent: -120, autoAlpha: 0, duration: 0.45, ease: 'power1.in' }, 0.12)
     // soft clouds rush past
     .fromTo(q('.io-cloud'), { scale: 0.4, autoAlpha: 0 }, { scale: 1.3, autoAlpha: 0.9, duration: 0.35, stagger: 0.06, ease: 'power1.out' }, 0.3)

@@ -23,8 +23,13 @@ export function CardFrame({ children, className = '', toran = true }) {
             <Toran count={9} />
           </div>
         )}
-        <FloralCluster className="wcard__flora wcard__flora--bl" />
-        <FloralCluster className="wcard__flora wcard__flora--br" />
+        {/* wrapper divs bloom in as a whole (GPU), the SVG inside stays static */}
+        <div className="wcard__flora wcard__flora--bl" aria-hidden="true">
+          <FloralCluster />
+        </div>
+        <div className="wcard__flora wcard__flora--br" aria-hidden="true">
+          <FloralCluster />
+        </div>
         <div className="wcard__content">{children}</div>
         <div className="wcard__sheen" aria-hidden="true" />
       </div>
@@ -114,20 +119,31 @@ export function CardDoors() {
  * `at` the timeline position to start from.
  */
 export function addCardReveal(tl, q, at = 0) {
-  tl.from(q('.wcard__corner'), { autoAlpha: 0, scale: 0.6, duration: 1.2, stagger: 0.08, ease: 'power3.out' }, at)
-    .from(q('.wcard__toran'), { yPercent: -110, autoAlpha: 0, duration: 1.4, ease: 'power3.out' }, at + 0.1)
-    .from(q('.wcard__watermark'), { autoAlpha: 0, scale: 0.8, rotation: -30, duration: 2.2, ease: 'power2.out' }, at)
-    .from(q('.r-invocation'), { autoAlpha: 0, y: 12, letterSpacing: '0.4em', duration: 1.2, ease: 'power2.out' }, at + 0.35)
-    .from(q('.r-preamble'), { autoAlpha: 0, y: 10, duration: 1 }, at + 0.7)
-    .from(q('.r-name1 .ch'), { autoAlpha: 0, yPercent: 40, rotation: -8, duration: 0.9, stagger: 0.06, ease: 'power3.out' }, at + 1.0)
-    .from(q('.r-amp em'), { autoAlpha: 0, scale: 0.4, rotation: -25, duration: 1.1, ease: 'power3.out' }, at + 1.45)
-    .from(q('.r-amp .couple-names__line'), { scaleX: 0, duration: 1, ease: 'power2.out' }, at + 1.55)
-    .from(q('.r-name2 .ch'), { autoAlpha: 0, yPercent: 40, rotation: -8, duration: 0.9, stagger: 0.06, ease: 'power3.out' }, at + 1.75)
-    .from(q('.r-request'), { autoAlpha: 0, y: 10, duration: 1 }, at + 2.3)
-    .from(q('.r-rule'), { autoAlpha: 0, scaleX: 0.2, duration: 1.1, ease: 'power2.out' }, at + 2.45)
-    .from(q('.r-detail'), { autoAlpha: 0, y: 10, duration: 0.9, stagger: 0.14 }, at + 2.6)
-    .from(q('.wcard__flora .cluster-leaves path'), { autoAlpha: 0, duration: 1, stagger: 0.02 }, at + 0.8)
-    .from(q('.wcard__flora .bloom'), { scale: 0, rotation: -60, duration: 1.3, stagger: 0.05, ease: 'back.out(1.3)' }, at + 0.9)
-    .fromTo(q('.wcard__sheen'), { xPercent: -130 }, { xPercent: 230, duration: 1.8, ease: 'power2.inOut' }, at + 3.1);
+  // skip parts a given card doesn't have (the closing card has no toran, etc.)
+  const from = (sel, vars, pos) => {
+    const targets = q(sel);
+    if (targets.length) tl.from(targets, vars, at + pos);
+  };
+  from('.wcard__corner', { autoAlpha: 0, scale: 0.6, duration: 1.2, stagger: 0.08, ease: 'power3.out' }, 0);
+  from('.wcard__toran', { yPercent: -110, autoAlpha: 0, duration: 1.4, ease: 'power3.out' }, 0.1);
+  // near-zero opacity (not hidden) + no scale: the hero's watermark/bouquets are
+  // pre-rasterised GPU layers — this lets them be drawn ahead of time and stay sharp
+  from('.wcard__watermark', { opacity: 0.001, rotation: -30, duration: 2.2, ease: 'power2.out' }, 0);
+  // (no letter-spacing tween here — it re-laid-out the text on every frame)
+  from('.r-invocation', { autoAlpha: 0, y: 12, scale: 0.94, duration: 1.2, ease: 'power2.out' }, 0.35);
+  from('.r-preamble', { autoAlpha: 0, y: 10, duration: 1 }, 0.7);
+  from('.r-name1 .ch', { autoAlpha: 0, yPercent: 40, rotation: -8, duration: 0.9, stagger: 0.06, ease: 'power3.out' }, 1.0);
+  from('.r-amp em', { autoAlpha: 0, scale: 0.4, rotation: -25, duration: 1.1, ease: 'power3.out' }, 1.45);
+  from('.r-amp .couple-names__line', { scaleX: 0, duration: 1, ease: 'power2.out' }, 1.55);
+  from('.r-name2 .ch', { autoAlpha: 0, yPercent: 40, rotation: -8, duration: 0.9, stagger: 0.06, ease: 'power3.out' }, 1.75);
+  from('.r-request', { autoAlpha: 0, y: 10, duration: 1 }, 2.3);
+  from('.r-rule', { autoAlpha: 0, scaleX: 0.2, duration: 1.1, ease: 'power2.out' }, 2.45);
+  from('.r-detail', { autoAlpha: 0, y: 10, duration: 0.9, stagger: 0.14 }, 2.6);
+  // bouquets sweep in from their corner as a whole — animating each flower
+  // inside the SVG forced the entire bouquet to repaint every frame
+  from('.wcard__flora--bl', { opacity: 0.001, xPercent: -30, yPercent: 30, rotation: -18, duration: 1.4, ease: 'back.out(1.3)' }, 0.8);
+  from('.wcard__flora--br', { opacity: 0.001, xPercent: 30, yPercent: 30, rotation: 18, duration: 1.4, ease: 'back.out(1.3)' }, 0.95);
+  const sheen = q('.wcard__sheen');
+  if (sheen.length) tl.fromTo(sheen, { xPercent: -130 }, { xPercent: 230, duration: 1.8, ease: 'power2.inOut' }, at + 3.1);
   return tl;
 }

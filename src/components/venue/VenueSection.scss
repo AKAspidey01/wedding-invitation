@@ -10,8 +10,9 @@
   isolation: isolate;
 
   // After the invitation opens, the hall rises over the last part of the
-  // pinned card flight instead of waiting below it.
-  :root.is-flight-ready & {
+  // pinned card flight instead of waiting below it. (Class is set on the venue
+  // itself, not <html>, so toggling it doesn't restyle the whole page.)
+  &.is-risen {
     margin-top: -50vh;
     margin-top: -50svh;
   }
@@ -65,6 +66,8 @@
       radial-gradient(80% 50% at 50% 35%, rgba(255, 252, 245, 0.6), transparent 75%);
   }
 
+  // Only the chandelier candle flames twinkle. Twinkling the garland lights and
+  // big glow halos repainted the full-screen hall artwork on every frame.
   .bh-twinkle {
     animation: twinkle 3.4s ease-in-out infinite;
   }
@@ -169,12 +172,15 @@
     width: min(46vw, 300px);
     height: min(46vw, 300px);
     pointer-events: none;
+    will-change: transform;
 
     &--l {
       left: -6vw;
+      transform-origin: 0% 100%;
     }
     &--r {
       right: -6vw;
+      transform-origin: 100% 100%;
     }
 
     .floral-cluster {

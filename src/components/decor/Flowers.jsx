@@ -31,12 +31,21 @@ const MARIGOLD_RINGS = [
   [8, 3.6, 4, '#fbc75a'],
 ];
 const MARIGOLD_YELLOW = ['#e9a91f', '#f3bf32', '#fbd352', '#ffe07a'];
+// Lightweight version for tiny marigolds (garlands, toran strings): 16 circles
+// instead of 55 — identical at that size, far cheaper to paint.
+const MARIGOLD_RINGS_LITE = [
+  [10, 13, 7, '#e2861d'],
+  [6, 6, 6, '#f6b23c'],
+];
+const MARIGOLD_YELLOW_LITE = ['#e9a91f', '#fbd352'];
 
-export function Marigold({ x = 0, y = 0, s = 1, r = 0, yellow = false, bloom = 'bloom' }) {
+export function Marigold({ x = 0, y = 0, s = 1, r = 0, yellow = false, bloom = 'bloom', lite = false }) {
+  const rings = lite ? MARIGOLD_RINGS_LITE : MARIGOLD_RINGS;
+  const yellows = lite ? MARIGOLD_YELLOW_LITE : MARIGOLD_YELLOW;
   return (
     <g transform={T(x, y, s, r)}>
       <g className={bloom}>
-        {MARIGOLD_RINGS.map(([n, rad, size, color], ri) =>
+        {rings.map(([n, rad, size, color], ri) =>
           range(n).map((i) => (
             <circle
               key={`${ri}-${i}`}
@@ -44,7 +53,7 @@ export function Marigold({ x = 0, y = 0, s = 1, r = 0, yellow = false, bloom = '
               cy="0"
               r={size}
               transform={`rotate(${(i * 360) / n + ri * 7})`}
-              fill={yellow ? MARIGOLD_YELLOW[ri] : color}
+              fill={yellow ? yellows[ri] : color}
               stroke={yellow ? '#c98f12' : '#c46a10'}
               strokeOpacity="0.45"
               strokeWidth="0.5"

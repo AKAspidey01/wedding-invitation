@@ -30,6 +30,7 @@
     width: min(40vw, 240px);
     height: min(40vw, 240px);
     pointer-events: none;
+    will-change: transform;
 
     .floral-cluster {
       width: 100%;
@@ -39,10 +40,12 @@
     &--tl {
       top: -2vw;
       left: -6vw;
+      transform-origin: 0% 0%;
     }
     &--br {
       bottom: -2vw;
       right: -6vw;
+      transform-origin: 100% 100%;
     }
 
     .is-mirrored {
@@ -94,6 +97,7 @@
   align-items: center;
   gap: 0.8rem;
   width: clamp(88px, 27vw, 150px);
+  will-change: transform; // tilts up in 3D on reveal
 
   &__tile {
     position: relative;

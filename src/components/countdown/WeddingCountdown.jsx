@@ -62,7 +62,8 @@ export default function WeddingCountdown() {
       .from(q('.r-head-rule'), { autoAlpha: 0, scaleX: 0.3, duration: 1 }, 0.2)
       .from(q('.cd-unit'), { autoAlpha: 0, y: 60, rotationX: -55, transformPerspective: 800, transformOrigin: '50% 100%', duration: 1.3, stagger: 0.15 }, 0.3)
       .from(q('.countdown__note'), { autoAlpha: 0, y: 16 }, 0.9)
-      .from(q('.countdown__flora .bloom'), { scale: 0, rotation: -40, duration: 1.2, stagger: 0.03, ease: 'back.out(1.2)' }, 0.5);
+      // bouquets bloom in as a whole (GPU) rather than flower-by-flower (repaint)
+      .from(q('.countdown__flora'), { autoAlpha: 0, scale: 0.6, rotation: (i) => (i ? 12 : -12), duration: 1.3, stagger: 0.1, ease: 'back.out(1.3)' }, 0.5);
   });
 
   const tz = weddingConfig.timezone.label;

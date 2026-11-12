@@ -19,8 +19,19 @@ export default function App() {
     document.fonts?.ready.then(() => ScrollTrigger.refresh());
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener('load', onLoad);
+
+    // Pause the looping decorative CSS animations (garland sway, twinkles,
+    // diya flames, mandala spin…) in every section that is off-screen —
+    // otherwise the browser keeps working on them and the visible part stutters.
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.classList.toggle('is-offscreen', !e.isIntersecting)),
+      { rootMargin: '15% 0px' },
+    );
+    document.querySelectorAll('.experience section').forEach((s) => io.observe(s));
+
     return () => {
       window.removeEventListener('load', onLoad);
+      io.disconnect();
       destroy();
     };
   }, []);

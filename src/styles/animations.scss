@@ -76,15 +76,14 @@
   }
 }
 
+// opacity only — animating letter-spacing re-laid-out the text every frame
 @keyframes hint-breathe {
   0%,
   100% {
     opacity: 0.55;
-    letter-spacing: 0.3em;
   }
   50% {
     opacity: 1;
-    letter-spacing: 0.34em;
   }
 }
 
@@ -132,6 +131,27 @@
 
 .spin-slow {
   animation: slow-spin 140s linear infinite;
+}
+
+// Set by App when a section leaves the viewport: freeze its looping decor.
+// Only the elements that actually loop are listed — a catch-all `*` selector
+// made the browser restyle a whole section each time it crossed the screen edge.
+.is-offscreen {
+  .sway,
+  .spin-slow,
+  .bh-twinkle,
+  .diya__flame,
+  .diya__glow,
+  .paper-sheen,
+  .env-seal__ring,
+  .io-float,
+  .io-hint__text,
+  .io-hint__dot::after,
+  .io-scroll-cue i,
+  .vmap__skeleton,
+  .vmap__skeleton .mandala {
+    animation-play-state: paused;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

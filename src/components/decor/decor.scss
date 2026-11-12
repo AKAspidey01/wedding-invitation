@@ -19,6 +19,20 @@
   height: auto;
 }
 
+// Torans printed on cards stay still — a swaying SVG inside a card forces the
+// whole card (paper, mandala, florals) to repaint on every frame.
+.wcard__toran .sway,
+.event-card__toran .sway {
+  animation: none;
+}
+
+// Free-standing torans sway on their own GPU layer so they don't drag the
+// surrounding scene into a repaint.
+.io-toran,
+.closing__toran {
+  will-change: transform;
+}
+
 .diya {
   overflow: visible;
 

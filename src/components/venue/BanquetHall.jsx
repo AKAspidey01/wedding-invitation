@@ -21,7 +21,8 @@ function Chandelier({ cx, top = 0, drop = 70, scale = 1 }) {
   const t2 = tier(24 * scale, 4);
   return (
     <g>
-      <circle className="bh-twinkle" cx={cx} cy={y + 24} r={62 * scale} fill="url(#g-glow-warm)" />
+      {/* static halo — animating this large glow repainted the whole hall layer */}
+      <circle cx={cx} cy={y + 24} r={62 * scale} fill="url(#g-glow-warm)" />
       <line x1={cx} y1={top} x2={cx} y2={y - 6} stroke="#c49a4a" strokeWidth="1.2" />
       <circle cx={cx} cy={y - 6} r="3" fill="url(#g-gold)" />
       <path d={`M${t1[0][0]} ${t1[0][1]}Q${cx} ${y + 22 + 36 * scale * 0.9} ${t1[6][0]} ${t1[6][1]}`} fill="none" stroke="url(#g-gold)" strokeWidth="2" />
@@ -146,7 +147,7 @@ export function HallMid() {
         const t = i / 23;
         const x = t * 400;
         const y = 40 + Math.sin(t * Math.PI) * 44;
-        return <circle key={i} className="bh-twinkle" cx={x} cy={y + 1} r="2" fill="#ffe7a8" style={{ animationDelay: `${(i % 6) * -0.5}s` }} />;
+        return <circle key={i} cx={x} cy={y + 1} r="2" fill="#ffe7a8" opacity={i % 3 ? 0.75 : 1} />;
       })}
       <Chandelier cx={70} drop={40} scale={0.9} />
       <Chandelier cx={330} drop={40} scale={0.9} />

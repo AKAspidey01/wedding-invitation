@@ -22,6 +22,18 @@ $flap-h: 64%;
   width: 100%;
 }
 
+// Parts that fade or move during the opening each get their own GPU layer:
+// otherwise every fade frame would repaint the whole (zoomed) envelope scene.
+.env-back,
+.env-pocket,
+.env-sides,
+.env-flap-shadow,
+.env-back__liner,
+.env-pocket__address,
+.env-seal__half {
+  will-change: transform, opacity;
+}
+
 .env-back {
   top: 0;
   height: 100%;
@@ -107,9 +119,10 @@ $flap-h: 64%;
   height: $flap-h;
   z-index: 4;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  background: linear-gradient(180deg, transparent 30%, rgba(110, 72, 34, 0.32));
-  transform: translateY(5px);
-  filter: blur(3px);
+  // soft edge comes from the gradient itself — a blur() filter here had to be
+  // re-computed on every frame while the camera zooms
+  background: linear-gradient(180deg, transparent 35%, rgba(110, 72, 34, 0.14) 70%, rgba(110, 72, 34, 0.26));
+  transform: translateY(4px);
 }
 
 .env-flap {
@@ -117,6 +130,7 @@ $flap-h: 64%;
   height: $flap-h;
   z-index: 5;
   transform-origin: 50% 0%;
+  will-change: transform; // folds back in 3D — rasterise once
 
   &__front,
   &__back {

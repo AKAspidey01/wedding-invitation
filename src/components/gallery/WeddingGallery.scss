@@ -27,23 +27,33 @@
     }
   }
 
-  &__track {
+  // The strip is moved by GSAP Draggable, not native scrolling, so vertical
+  // swipes over the photos keep scrolling the page.
+  &__viewport {
     position: relative;
     z-index: 2;
+    // clip (not hidden): clips the strip without becoming a scroll container,
+    // so a vertical swipe that starts on a photo always reaches the page
+    overflow: hidden;
+    overflow: clip;
+    overscroll-behavior: auto;
+    padding: 2rem 0 2.4rem;
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__track {
+    position: relative;
     display: flex;
     gap: 3vw;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 2rem calc(50% - var(--slide-w) / 2) 2.4rem;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    touch-action: pan-x pan-y;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    width: max-content;
+    touch-action: pan-y; // horizontal = drag the strip, vertical = scroll page
+    will-change: transform;
   }
 
   &__controls {
@@ -99,12 +109,12 @@
   }
 }
 
+.gslide__card {
+  will-change: transform, opacity; // swoops in on reveal
+}
+
 .gslide {
   flex: 0 0 var(--slide-w);
-  scroll-snap-align: center;
-  // 'normal' lets a flick glide with momentum and settle on a card,
-  // instead of slamming to a halt at the very next one.
-  scroll-snap-stop: normal;
   transform-origin: 50% 50%;
   will-change: transform, opacity;
   backface-visibility: hidden;

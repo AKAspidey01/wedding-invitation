@@ -20,7 +20,7 @@ export default function FloralDivider({ from = '#fdf8ef', to = '#fdf8ef' }) {
         autoAlpha: 1,
         y: 0,
         ease: 'none',
-        scrollTrigger: { trigger: ref.current, start: 'top 95%', end: 'top 55%', scrub: 1 },
+        scrollTrigger: { trigger: ref.current, start: 'top 95%', end: 'top 55%', scrub: 0.5 },
       },
     );
   });

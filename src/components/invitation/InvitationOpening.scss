@@ -74,6 +74,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, #fffefa 0%, rgba(255, 250, 238, 0.85) 35%, rgba(253, 244, 225, 0) 70%);
   opacity: 0.7;
+  will-change: transform, opacity; // grows during the scroll flight
 }
 
 .io-mandala {
@@ -85,6 +86,7 @@
   height: var(--m);
   margin: calc(var(--m) / -2) 0 0 calc(var(--m) / -2);
   opacity: 0.32;
+  will-change: transform; // zoomed during the opening — rasterise once
 
   > div,
   .mandala {
@@ -102,6 +104,7 @@
   background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.6) 55%, rgba(255, 250, 240, 0));
   opacity: 0;
   visibility: hidden;
+  will-change: transform, opacity; // rush past during the scroll flight
 }
 
 .io-toran {
@@ -117,6 +120,14 @@
   z-index: 4;
   width: min(48vw, 300px);
   height: min(48vw, 300px);
+  will-change: transform; // blooms in / drifts out as a whole on the GPU
+
+  &--tl {
+    transform-origin: 0% 0%;
+  }
+  &--br {
+    transform-origin: 100% 100%;
+  }
 
   &--tl {
     top: max(28px, 4vh);
@@ -199,6 +210,7 @@
     box-shadow: 0 6px 20px -8px rgba(120, 78, 36, 0.35), inset 0 0 0 1px rgba(196, 154, 74, 0.4);
     font-family: $font-caps;
     font-size: 0.7rem;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
     color: $gold-deep;
     animation: hint-breathe 3.2s ease-in-out infinite;

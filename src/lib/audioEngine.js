@@ -52,10 +52,32 @@ function startFile() {
   audioEl.play().catch(() => {});
 }
 
+let synthStarted = false;
 function startSynth() {
-  if (synth || !ctx) return;
-  synth = createRagaSynth(ctx, master);
+  if (synthStarted || !ctx) return;
+  synthStarted = true;
+  if (!synth) synth = createRagaSynth(ctx, master);
   synth.start();
+}
+
+/** Create the (suspended) audio graph. Slow on some devices — see prepare(). */
+function ensureContext() {
+  if (ctx !== null) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  try {
+    ctx = AC ? new AC() : null;
+  } catch {
+    ctx = null;
+  }
+  if (!ctx) {
+    ctx = undefined; // tried and unavailable
+    return;
+  }
+  master = ctx.createGain();
+  master.gain.value = 0;
+  master.connect(ctx.destination);
+  // build the synth graph (reverb impulse etc.) ahead of time too
+  if (!cfg.src && cfg.synthFallback) synth = createRagaSynth(ctx, master);
 }
 
 export const audioEngine = {
@@ -64,6 +86,17 @@ export const audioEngine = {
     return () => listeners.delete(l);
   },
   getState: () => state,
+
+  /**
+   * Warm-up while the visitor looks at the sealed envelope: creating an
+   * AudioContext can block the main thread for hundreds of ms, which used to
+   * freeze the first frames of the opening. The context stays suspended until
+   * start() resumes it inside the tap (allowed by mobile autoplay rules).
+   */
+  prepare() {
+    if (state.started) return;
+    ensureContext();
+  },
 
   /** Call synchronously inside a tap/click handler. */
   start() {
@@ -74,18 +107,9 @@ export const audioEngine = {
     } catch {
       /* unsupported — ignore */
     }
-    const AC = window.AudioContext || window.webkitAudioContext;
-    try {
-      ctx = AC ? new AC() : null;
-    } catch {
-      ctx = null;
-    }
-    if (ctx) {
-      master = ctx.createGain();
-      master.gain.value = 0;
-      master.connect(ctx.destination);
-      ctx.resume?.();
-    }
+    ensureContext(); // no-op when prepare() already ran
+    if (ctx) ctx.resume?.();
+    else ctx = null;
 
     if (cfg.src) startFile();
     else if (cfg.synthFallback && ctx) startSynth();

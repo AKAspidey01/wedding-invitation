@@ -29,15 +29,15 @@ export default function VenueSection() {
         .from(q('.venue__back'), { scale: 1.2, duration: 2.2, ease: 'power3.out' }, 0)
         .from(q('.venue__front'), { scale: 1.15, autoAlpha: 0, duration: 1.8, ease: 'power3.out' }, 0.3)
         .from(q('.venue__reveal'), { autoAlpha: 0, y: 36, duration: 1.1, stagger: 0.16 }, 0.7)
-        .from(q('.venue__flora'), { autoAlpha: 0, y: 60, duration: 1.4, stagger: 0.1 }, 0.9)
-        .from(q('.venue__flora .bloom'), { scale: 0, rotation: -40, duration: 1.2, stagger: 0.03, ease: 'back.out(1.2)' }, 1);
+        // bouquets bloom in as a whole (GPU) rather than flower-by-flower (repaint)
+        .from(q('.venue__flora'), { autoAlpha: 0, y: 60, scale: 0.6, rotation: (i) => (i ? 12 : -12), duration: 1.4, stagger: 0.1, ease: 'back.out(1.2)' }, 0.9);
     },
     { start: 'top 75%' },
   );
 
   // Depth: the back wall drifts slowly, the drapes and garlands faster.
   useScrollScene(ref, (q) => {
-    const st = { trigger: ref.current, start: 'top bottom', end: 'bottom top', scrub: 1 };
+    const st = { trigger: ref.current, start: 'top bottom', end: 'bottom top', scrub: 0.5 };
     gsap.fromTo(q('.venue__back'), { yPercent: -5 }, { yPercent: 5, ease: 'none', scrollTrigger: st });
     gsap.fromTo(q('.venue__mid'), { yPercent: -2 }, { yPercent: 8, ease: 'none', scrollTrigger: { ...st } });
     gsap.fromTo(q('.venue__front'), { yPercent: 4 }, { yPercent: -6, ease: 'none', scrollTrigger: { ...st } });

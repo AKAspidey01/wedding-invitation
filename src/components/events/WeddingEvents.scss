@@ -21,6 +21,7 @@
 
 .event-card {
   position: relative;
+  will-change: transform, opacity; // rises in 3D on reveal
   max-width: 400px;
   width: 100%;
   margin: 0 auto;
@@ -28,6 +29,9 @@
   &__inner {
     position: relative;
     overflow: hidden;
+    // tilted on every scroll frame — keep it on its own GPU layer so the card
+    // (paper, florals, toran) isn't re-painted each frame
+    will-change: transform;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,6 +110,7 @@
     width: 78px;
     height: 92px;
     margin-top: 1.2rem;
+    will-change: transform; // the flickering diya repaints only its own layer
 
     svg {
       width: 100%;
@@ -175,6 +180,7 @@
     width: 120px;
     height: 120px;
     pointer-events: none;
+    will-change: transform;
 
     .floral-cluster {
       width: 100%;
@@ -183,12 +189,14 @@
 
     &--l {
       left: -14px;
+      transform-origin: 0% 100%;
       .floral-cluster {
         transform: scaleY(-1);
       }
     }
     &--r {
       right: -14px;
+      transform-origin: 100% 100%;
       .floral-cluster {
         transform: scale(-1, -1);
       }

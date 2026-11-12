@@ -16,27 +16,33 @@ export default function WeddingEvents() {
   useSectionReveal(ref, (tl, q) => {
     tl.from(q('.r-head'), { autoAlpha: 0, y: 26, stagger: 0.12 }, 0)
       .from(q('.r-head-rule'), { autoAlpha: 0, scaleX: 0.3, duration: 1 }, 0.2);
-    q('.event-card').forEach((card, i) => {
-      const at = 0.4 + i * 0.45;
-      tl.from(card, { autoAlpha: 0, y: 90, rotationX: 22, transformPerspective: 1100, transformOrigin: '50% 100%', duration: 1.5 }, at)
-        .from(card.querySelectorAll('.event-card__toran'), { yPercent: -100, autoAlpha: 0, duration: 1.2 }, at + 0.45)
-        .from(card.querySelectorAll('.ev-reveal'), { autoAlpha: 0, y: 18, stagger: 0.1, duration: 0.9 }, at + 0.55)
-        .from(card.querySelectorAll('.bloom'), { scale: 0, rotation: -40, stagger: 0.03, duration: 1.1, ease: 'back.out(1.2)' }, at + 0.7);
-    });
-  }, { start: 'top 70%' });
+  }, { start: 'top 75%' });
 
-  // Subtle depth while scrolling: cards tilt gently as they pass.
   useScrollScene(ref, (q) => {
-    q('.event-card__inner').forEach((el, i) => {
+    q('.event-card').forEach((card, i) => {
+      // Each card reveals when *it* scrolls into view (on phones the cards are
+      // stacked, so a single section trigger played card two while off-screen).
+      gsap
+        .timeline({
+          defaults: { ease: 'power3.out' },
+          scrollTrigger: { trigger: card, start: 'top 88%', once: true },
+        })
+        .from(card, { autoAlpha: 0, y: 70, rotationX: 16, transformPerspective: 1100, transformOrigin: '50% 100%', duration: 1.2 }, 0)
+        .from(card.querySelectorAll('.event-card__toran'), { yPercent: -100, autoAlpha: 0, duration: 1 }, 0.35)
+        .from(card.querySelectorAll('.ev-reveal'), { autoAlpha: 0, y: 16, stagger: 0.08, duration: 0.8 }, 0.4)
+        // bouquets bloom in as a whole (GPU) rather than flower-by-flower (repaint)
+        .from(card.querySelectorAll('.event-card__flora'), { autoAlpha: 0, scale: 0.55, rotation: (k) => (k ? 14 : -14), stagger: 0.08, duration: 1, ease: 'back.out(1.3)' }, 0.5);
+
+      // Subtle depth while scrolling: the card tilts gently as it passes.
       gsap.fromTo(
-        el,
-        { rotationX: 6, rotationY: i ? -3 : 3 },
+        card.querySelector('.event-card__inner'),
+        { rotationX: 4, rotationY: i ? -2 : 2 },
         {
-          rotationX: -6,
-          rotationY: i ? 3 : -3,
+          rotationX: -4,
+          rotationY: i ? 2 : -2,
           transformPerspective: 1200,
           ease: 'none',
-          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 1 },
+          scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 0.4 },
         },
       );
     });

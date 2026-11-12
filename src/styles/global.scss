@@ -9,6 +9,7 @@
   --rose: #{$rose};
   --ink: #{$ink};
   --safe-b: env(safe-area-inset-bottom, 0px);
+  --paper-grain: url('../assets/paper-grain.png');
 }
 
 *,
@@ -23,10 +24,12 @@ html {
   overflow-x: hidden;
 }
 
-html.scroll-locked,
-html.scroll-locked body {
+// Scroll lock (opening sequence, lightbox). Only <html> is touched: toggling
+// touch-action/overflow on <body> made Chrome restyle every element on the
+// page when the lock was released (~300ms freeze as the card finished).
+// Touch scrolling is blocked meanwhile by Lenis (stopped → cancels touchmove).
+html.scroll-locked {
   overflow: hidden;
-  touch-action: none;
 }
 
 body {
@@ -39,7 +42,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
+  // No overflow-x here: with <html> also clipping, it would turn <body> into a
+  // nested scroll box. Horizontal overflow is clipped by html and .experience.
 }
 
 img,
