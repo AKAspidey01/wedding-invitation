@@ -1,0 +1,436 @@
+@use '../../styles/variables' as *;
+
+/* ───────── Card frame (shared by hero & closing) ───────── */
+.wcard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  container-type: inline-size;
+
+  &__paper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    @include paper(#fffaf1);
+    box-shadow:
+      0 2px 0 rgba(255, 255, 255, 0.9) inset,
+      0 40px 70px -28px rgba(120, 78, 36, 0.45),
+      0 12px 24px -12px rgba(120, 78, 36, 0.3);
+  }
+
+  &__border {
+    position: absolute;
+    inset: 3.2cqw;
+    border: 1.5px solid rgba(196, 154, 74, 0.75);
+    border-radius: 3px;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 1.4cqw;
+      border: 0.8px solid rgba(196, 154, 74, 0.55);
+      border-radius: 2px;
+    }
+  }
+
+  &__corner {
+    position: absolute;
+    width: 20cqw;
+    height: 20cqw;
+    z-index: 2;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &--tl {
+      top: 1.6cqw;
+      left: 1.6cqw;
+    }
+    &--tr {
+      top: 1.6cqw;
+      right: 1.6cqw;
+      svg {
+        transform: scaleX(-1);
+      }
+    }
+    &--bl {
+      bottom: 1.6cqw;
+      left: 1.6cqw;
+      svg {
+        transform: scaleY(-1);
+      }
+    }
+    &--br {
+      bottom: 1.6cqw;
+      right: 1.6cqw;
+      svg {
+        transform: scale(-1, -1);
+      }
+    }
+  }
+
+  &__watermark {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120cqw;
+    height: 120cqw;
+    margin: -60cqw 0 0 -60cqw;
+    opacity: 0.13;
+    pointer-events: none;
+
+    .mandala {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__toran {
+    position: absolute;
+    top: 3.4cqw;
+    left: 9cqw;
+    right: 9cqw;
+    z-index: 3;
+  }
+
+  &__flora {
+    position: absolute;
+    width: 34cqw;
+    height: 34cqw;
+    z-index: 3;
+
+    &--bl {
+      left: -2cqw;
+      bottom: -2cqw;
+      transform: scaleY(-1);
+    }
+    &--br {
+      right: -2cqw;
+      bottom: -2cqw;
+      transform: scale(-1, -1);
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 4;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20cqw 12cqw 20cqw;
+  }
+
+  &__sheen {
+    position: absolute;
+    top: -10%;
+    bottom: -10%;
+    left: 0;
+    width: 45%;
+    z-index: 6;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 248, 225, 0.65) 50%, transparent);
+    transform: translateX(-130%) skewX(-18deg);
+    mix-blend-mode: soft-light;
+  }
+
+  &__invocation {
+    font-family: $font-deva;
+    font-weight: 600;
+    font-size: 4.3cqw;
+    letter-spacing: 0.06em;
+    @include gold-text;
+  }
+
+  &__preamble {
+    margin-top: 3.2cqw;
+    font-family: $font-caps;
+    font-size: 2.85cqw;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: $ink-soft;
+  }
+
+  &__request {
+    margin-top: 1cqw;
+    font-family: $font-serif;
+    font-style: italic;
+    font-size: 4.4cqw;
+    line-height: 1.3;
+    color: $ink-soft;
+  }
+
+  &__rule {
+    width: 56cqw !important;
+    margin: 3cqw auto 2cqw !important;
+  }
+
+  &__events {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 6cqw;
+
+    li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.25;
+    }
+
+    span {
+      font-family: $font-caps;
+      font-size: 2.7cqw;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: $gold-deep;
+    }
+
+    b {
+      font-family: $font-serif;
+      font-weight: 600;
+      font-size: 5.2cqw;
+      color: $ink;
+    }
+  }
+
+  &__date,
+  &__city {
+    margin-top: 1.6cqw;
+    font-family: $font-caps;
+    font-size: 2.8cqw;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: $ink-soft;
+  }
+}
+
+/* ───────── Couple names ───────── */
+.couple-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5cqw 0 0;
+  font-weight: 400;
+
+  &__name {
+    display: block;
+    font-family: $font-script;
+    font-size: 14cqw;
+    line-height: 1.12;
+    color: $rose-deep;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 6px 18px rgba(185, 96, 111, 0.18);
+    white-space: nowrap;
+
+    .ch {
+      display: inline-block;
+    }
+  }
+
+  &__amp {
+    display: flex;
+    align-items: center;
+    gap: 3cqw;
+    margin: -1cqw 0;
+
+    em {
+      display: inline-block;
+      font-family: $font-serif;
+      font-style: italic;
+      font-size: 8cqw;
+      line-height: 1;
+      @include gold-text;
+    }
+  }
+
+  &__line {
+    display: block;
+    width: 12cqw;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $gold, transparent);
+  }
+
+  &--xl &__name {
+    font-size: 15cqw;
+  }
+}
+
+/* ───────── Gate-fold doors ───────── */
+.wcard-doors {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  backface-visibility: hidden;
+
+  &--l {
+    left: 0;
+  }
+  &--r {
+    right: 0;
+  }
+
+  &__face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    container-type: inline-size;
+    background-color: #f2c6c1;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(196, 154, 74, 0.55) 1.2px, transparent 1.6px),
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 1px, transparent 1.4px),
+      linear-gradient(165deg, #f8dcd5 0%, #efbcb8 55%, #e6a9a8 100%);
+    background-size: 14px 14px, 14px 14px, 100% 100%;
+    background-position: 0 0, 7px 7px, 0 0;
+    box-shadow: inset 0 0 40px rgba(156, 76, 92, 0.25);
+  }
+
+  &--l &__face {
+    border-radius: 6px 0 0 6px;
+    box-shadow: inset -1px 0 0 rgba(156, 115, 48, 0.6), inset 0 0 40px rgba(156, 76, 92, 0.25);
+  }
+  &--r &__face {
+    border-radius: 0 6px 6px 0;
+    box-shadow: inset 1px 0 0 rgba(156, 115, 48, 0.6), inset 0 0 40px rgba(156, 76, 92, 0.25);
+  }
+
+  &__frame {
+    position: absolute;
+    inset: 6cqw;
+    border: 1.5px solid rgba(214, 178, 105, 0.95);
+    border-radius: 3px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 3cqw;
+      border: 0.8px solid rgba(255, 240, 210, 0.75);
+    }
+  }
+
+  &--l &__frame {
+    right: -2px;
+    border-right: 0;
+  }
+  &--r &__frame {
+    left: -2px;
+    border-left: 0;
+  }
+
+  &__corner {
+    position: absolute;
+    width: 34cqw;
+    height: 34cqw;
+  }
+  &--l &__corner--t {
+    top: 3cqw;
+    left: 3cqw;
+  }
+  &--l &__corner--b {
+    bottom: 3cqw;
+    left: 3cqw;
+    transform: scaleY(-1);
+  }
+  &--r &__corner--t {
+    top: 3cqw;
+    right: 3cqw;
+    transform: scaleX(-1);
+  }
+  &--r &__corner--b {
+    bottom: 3cqw;
+    right: 3cqw;
+    transform: scale(-1, -1);
+  }
+
+  &__medallion {
+    position: absolute;
+    top: 50%;
+    width: 120cqw;
+    height: 120cqw;
+    margin-top: -60cqw;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff6ea 0 34%, #f7e3cf 35%, #f3d5c5 60%, transparent 61%);
+    box-shadow: 0 0 0 1.5px rgba(196, 154, 74, 0.8), 0 10px 30px rgba(156, 76, 92, 0.25);
+
+    .mandala {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &--l &__medallion {
+    right: -60cqw;
+  }
+  &--r &__medallion {
+    left: -60cqw;
+  }
+
+  &__monogram {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-family: $font-script;
+    font-size: 30cqw;
+    color: $rose-deep;
+
+    small {
+      font-family: $font-serif;
+      font-style: italic;
+      font-size: 0.5em;
+      margin: 0 0.15em;
+      color: $gold-deep;
+    }
+  }
+
+  &__knob {
+    position: absolute;
+    top: 50%;
+    width: 7cqw;
+    height: 7cqw;
+    margin-top: 68cqw;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff3cf, #d6ae5e 45%, #9c7330);
+    box-shadow: 0 2px 4px rgba(90, 62, 43, 0.35);
+  }
+  &--l &__knob {
+    right: 6cqw;
+  }
+  &--r &__knob {
+    left: 6cqw;
+  }
+
+  &__caption {
+    position: absolute;
+    bottom: 16cqw;
+    font-family: $font-script;
+    font-size: 17cqw;
+    line-height: 1;
+    color: #fff8ee;
+    text-shadow: 0 2px 6px rgba(156, 76, 92, 0.45);
+  }
+  &--l &__caption {
+    right: 10cqw;
+  }
+  &--r &__caption {
+    left: 10cqw;
+  }
+}

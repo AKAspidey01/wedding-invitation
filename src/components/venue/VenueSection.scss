@@ -1,0 +1,207 @@
+@use '../../styles/variables' as *;
+
+.venue {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  z-index: 2;
+  background: #fbf3e6;
+  isolation: isolate;
+
+  // After the invitation opens, the hall rises over the last part of the
+  // pinned card flight instead of waiting below it.
+  :root.is-flight-ready & {
+    margin-top: -50vh;
+    margin-top: -50svh;
+  }
+
+  // seamless hand-off from the hero's ivory light
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 22%;
+    z-index: 4;
+    background: linear-gradient(180deg, #fbf3e6 0%, rgba(251, 243, 230, 0) 100%);
+    pointer-events: none;
+  }
+
+  &__frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  &__back,
+  &__mid,
+  &__front {
+    position: absolute;
+    inset: -6% 0;
+    will-change: transform;
+
+    .bh-layer,
+    picture,
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    img {
+      object-fit: cover;
+      object-position: 50% 60%;
+    }
+  }
+
+  &__veil {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 42% at 50% 36%, rgba(255, 252, 245, 0.78), rgba(255, 252, 245, 0) 75%);
+  }
+
+  &--photo &__veil {
+    background:
+      linear-gradient(180deg, rgba(253, 248, 239, 0.88) 0%, rgba(253, 248, 239, 0.55) 45%, rgba(253, 248, 239, 0) 70%),
+      radial-gradient(80% 50% at 50% 35%, rgba(255, 252, 245, 0.6), transparent 75%);
+  }
+
+  .bh-twinkle {
+    animation: twinkle 3.4s ease-in-out infinite;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 5;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: clamp(7.5rem, 26vh, 13rem) 2.6rem 40vh;
+  }
+
+  &__eyebrow {
+    font-family: $font-script;
+    font-size: clamp(1.9rem, 8.5vw, 2.6rem);
+    line-height: 1.1;
+    color: $rose-deep;
+  }
+
+  &__name {
+    margin-top: 0.4rem;
+    font-family: $font-serif;
+    font-weight: 600;
+    font-size: clamp(2.1rem, 9.6vw, 3.4rem);
+    line-height: 1.08;
+    color: $ink;
+    text-shadow: 0 1px 0 #fff, 0 0 24px rgba(255, 250, 240, 0.9);
+    max-width: 13ch;
+  }
+
+  &__rule {
+    margin: 1.1rem auto 0.9rem !important;
+  }
+
+  &__times {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: clamp(1.4rem, 8vw, 3rem);
+
+    li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+    }
+
+    span {
+      @include eyebrow;
+      font-size: 0.66rem;
+    }
+
+    strong {
+      margin-top: 0.25rem;
+      font-family: $font-serif;
+      font-weight: 600;
+      font-size: clamp(1.6rem, 7vw, 2.1rem);
+      color: $rose-deep;
+    }
+
+    em {
+      font-family: $font-serif;
+      font-size: 0.95rem;
+      color: $ink-soft;
+    }
+  }
+
+  &__tz {
+    margin-top: 0.6rem;
+    font-family: $font-serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: $ink-soft;
+  }
+
+  &__city {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.1rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 251, 243, 0.8);
+    box-shadow: inset 0 0 0 1px rgba(196, 154, 74, 0.5);
+    font-family: $font-caps;
+    font-size: 0.78rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: $gold-deep;
+  }
+
+  &__flora {
+    position: absolute;
+    z-index: 6;
+    bottom: -4vw;
+    width: min(46vw, 300px);
+    height: min(46vw, 300px);
+    pointer-events: none;
+
+    &--l {
+      left: -6vw;
+    }
+    &--r {
+      right: -6vw;
+    }
+
+    .floral-cluster {
+      width: 100%;
+      height: 100%;
+    }
+
+    .is-flip-y {
+      transform: scaleY(-1);
+    }
+    .is-flip-xy {
+      transform: scale(-1, -1);
+    }
+  }
+
+  &__diya {
+    position: absolute;
+    z-index: 6;
+    bottom: 13vh;
+    width: 44px;
+    height: 52px;
+
+    &--l {
+      left: 27%;
+    }
+    &--r {
+      right: 27%;
+    }
+  }
+}

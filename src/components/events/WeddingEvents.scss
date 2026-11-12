@@ -1,0 +1,197 @@
+@use '../../styles/variables' as *;
+
+.events {
+  @include section-shell;
+  background:
+    radial-gradient(70% 30% at 50% 0%, rgba(253, 247, 238, 1), rgba(253, 247, 238, 0)),
+    linear-gradient(180deg, #fdf7ee 0%, #fbf0e6 50%, #fbf2ea 100%);
+
+  &__list {
+    display: grid;
+    gap: 2.6rem;
+    max-width: 880px;
+    margin: 0 auto;
+
+    @include from(760px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  }
+}
+
+.event-card {
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+
+  &__inner {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 5.4rem 1.6rem 4.6rem;
+    border-radius: 50% 50% 18px 18px / 150px 150px 18px 18px;
+    box-shadow:
+      inset 0 0 0 1.5px rgba(196, 154, 74, 0.85),
+      inset 0 0 0 8px rgba(255, 251, 243, 0.85),
+      inset 0 0 0 9px rgba(217, 184, 119, 0.6),
+      0 40px 60px -34px rgba(120, 78, 36, 0.55),
+      0 10px 22px -12px rgba(120, 78, 36, 0.3);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: $paper-grain;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+  }
+
+  &--one &__inner {
+    background:
+      radial-gradient(90% 60% at 50% 30%, rgba(255, 255, 255, 0.75), transparent 70%),
+      linear-gradient(170deg, #fff7f0 0%, #fbe1d6 55%, #f6cfc8 100%);
+  }
+
+  &--two &__inner {
+    background:
+      radial-gradient(90% 60% at 50% 30%, rgba(255, 255, 255, 0.75), transparent 70%),
+      linear-gradient(170deg, #fbfaf1 0%, #e9eedb 55%, #d9e3c9 100%);
+  }
+
+  &__toran {
+    position: absolute;
+    top: 9px;
+    left: 18%;
+    right: 18%;
+  }
+
+  &__day {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fffdf6, #f3e3c2);
+    box-shadow: inset 0 0 0 1.5px rgba(196, 154, 74, 0.85), inset 0 0 0 5px #fffaf0, inset 0 0 0 6px rgba(217, 184, 119, 0.6),
+      0 10px 18px -10px rgba(120, 78, 36, 0.5);
+    line-height: 1;
+
+    small {
+      @include eyebrow;
+      font-size: 0.56rem;
+      letter-spacing: 0.28em;
+      margin-top: 0.6rem;
+    }
+
+    span {
+      font-family: $font-serif;
+      font-weight: 600;
+      font-size: 1.9rem;
+      color: $rose-deep;
+      margin-top: -0.6rem;
+    }
+  }
+
+  &--two &__day span {
+    color: $sage-deep;
+  }
+
+  &__motif {
+    width: 78px;
+    height: 92px;
+    margin-top: 1.2rem;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__title {
+    margin-top: 0.5rem;
+    font-family: $font-script;
+    font-weight: 400;
+    font-size: clamp(3rem, 14vw, 3.8rem);
+    line-height: 1.05;
+    color: $rose-deep;
+  }
+
+  &--two &__title {
+    color: #6c7f52;
+  }
+
+  &__tagline {
+    @include eyebrow;
+    font-size: 0.66rem;
+    margin-top: 0.4rem;
+  }
+
+  &__rule {
+    margin: 1rem auto 0.6rem !important;
+    width: min(200px, 56vw) !important;
+  }
+
+  &__time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: $font-serif;
+    font-weight: 600;
+    font-size: clamp(2.3rem, 10vw, 2.8rem);
+    line-height: 1.1;
+    color: $ink;
+    text-shadow: 0 1px 0 #fff, 0 8px 18px rgba(156, 115, 48, 0.2);
+
+    svg {
+      color: $gold;
+    }
+  }
+
+  &__date {
+    margin-top: 0.3rem;
+    font-family: $font-serif;
+    font-size: 1.1rem;
+    color: $ink-soft;
+  }
+
+  &__venue {
+    margin-top: 0.6rem;
+    font-family: $font-caps;
+    font-size: 0.7rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: $ink-soft;
+  }
+
+  &__flora {
+    position: absolute;
+    bottom: -14px;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+
+    .floral-cluster {
+      width: 100%;
+      height: 100%;
+    }
+
+    &--l {
+      left: -14px;
+      .floral-cluster {
+        transform: scaleY(-1);
+      }
+    }
+    &--r {
+      right: -14px;
+      .floral-cluster {
+        transform: scale(-1, -1);
+      }
+    }
+  }
+}

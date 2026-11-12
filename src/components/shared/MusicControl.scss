@@ -1,0 +1,81 @@
+@use '../../styles/variables' as *;
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.music-control {
+  position: fixed;
+  z-index: 50;
+  right: 16px;
+  bottom: calc(16px + var(--safe-b));
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: $gold-deep;
+  background: radial-gradient(circle at 35% 30%, #fffdf8, #f6ead5);
+  box-shadow: 0 10px 24px -10px rgba(120, 78, 36, 0.55), inset 0 0 0 1px rgba(196, 154, 74, 0.55);
+
+  &__ring {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1px dashed rgba(196, 154, 74, 0.6);
+  }
+
+  &.is-playing &__ring {
+    animation: slow-spin 12s linear infinite;
+  }
+
+  &__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+
+  &__bars {
+    position: absolute;
+    bottom: 9px;
+    display: flex;
+    gap: 2px;
+    height: 7px;
+    opacity: 0;
+    transition: opacity 0.4s;
+
+    i {
+      display: block;
+      width: 2px;
+      height: 100%;
+      border-radius: 1px;
+      background: $champagne;
+      transform-origin: bottom;
+      animation: eq 1s ease-in-out infinite;
+
+      &:nth-child(2) {
+        animation-delay: -0.3s;
+      }
+      &:nth-child(3) {
+        animation-delay: -0.6s;
+      }
+      &:nth-child(4) {
+        animation-delay: -0.15s;
+      }
+    }
+  }
+
+  &.is-playing &__bars {
+    opacity: 1;
+  }
+
+  &.is-playing &__icon {
+    transform: translateY(-3px);
+  }
+}

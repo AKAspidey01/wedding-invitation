@@ -1,0 +1,193 @@
+@use '../../styles/variables' as *;
+
+.vmap {
+  @include section-shell;
+  padding-bottom: clamp(5.5rem, 16vw, 8rem);
+  background:
+    radial-gradient(90% 40% at 50% 0%, #fbf3e6 0%, rgba(251, 243, 230, 0) 100%),
+    linear-gradient(180deg, #fbf3e6 0%, #f5f2e4 45%, #f6f1e3 100%);
+  text-align: center;
+
+  &__mandala {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 150vw;
+    max-width: 900px;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    opacity: 0.12;
+    pointer-events: none;
+
+    .mandala {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__sprig {
+    position: absolute;
+    width: 46vw;
+    max-width: 260px;
+    opacity: 0.9;
+
+    &--l {
+      top: 0.25rem;
+      left: -16vw;
+      transform: rotate(-28deg);
+    }
+    &--r {
+      top: 0.25rem;
+      right: -16vw;
+      transform: rotate(28deg) scaleX(-1);
+    }
+  }
+
+  &__frame {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 520px);
+    margin: 0 auto;
+    padding: 9px;
+    border-radius: 50% 50% 22px 22px / 22% 22% 22px 22px;
+    background: linear-gradient(180deg, #fffaf1, #f5e9d3);
+    box-shadow:
+      inset 0 0 0 1.5px rgba(196, 154, 74, 0.85),
+      0 0 0 6px rgba(255, 250, 241, 0.9),
+      0 0 0 7px rgba(217, 184, 119, 0.7),
+      0 34px 60px -30px rgba(111, 138, 95, 0.55),
+      0 12px 26px -16px rgba(120, 78, 36, 0.4);
+  }
+
+  &__window {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    max-height: 64vh;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 50% 50% 16px 16px / 21% 21% 16px 16px;
+    background: #f1ece0;
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      opacity: 0;
+      transition: opacity 1.2s $ease-silk;
+      filter: sepia(0.12) saturate(0.95);
+
+      &.is-loaded {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__skeleton {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(90deg, #f3eee2 0%, #faf6ec 50%, #f3eee2 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2.2s linear infinite;
+    transition: opacity 0.8s;
+
+    .mandala {
+      position: absolute;
+      width: 60%;
+      opacity: 0.25;
+      animation: slow-spin 30s linear infinite;
+    }
+
+    span {
+      position: relative;
+      @include eyebrow;
+    }
+
+    &.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  &__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    color: $gold-deep;
+
+    p {
+      font-family: $font-serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: $ink-soft;
+      max-width: 22ch;
+    }
+
+    small {
+      font-size: 0.72rem;
+      color: $ink-soft;
+      opacity: 0.75;
+    }
+  }
+
+  &__corner {
+    position: absolute;
+    bottom: -10px;
+    width: 64px;
+    height: 64px;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    &--bl {
+      left: -10px;
+      svg {
+        transform: scaleY(-1);
+      }
+    }
+    &--br {
+      right: -10px;
+      svg {
+        transform: scale(-1, -1);
+      }
+    }
+  }
+
+  &__address {
+    position: relative;
+    z-index: 2;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-style: normal;
+    color: $ink-soft;
+
+    strong {
+      font-family: $font-serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: $ink;
+    }
+  }
+
+  &__actions {
+    position: relative;
+    z-index: 2;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+}

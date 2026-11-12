@@ -1,0 +1,66 @@
+// ─── Palette: Ethnic Luxury, light mode only ───
+$ivory: #fdf9f1;
+$cream: #f8efdf;
+$cream-deep: #f1e2c8;
+$beige: #e9d8bd;
+$champagne: #d9b877;
+$gold: #c49a4a;
+$gold-deep: #9c7330;
+$gold-light: #ead39c;
+$peach: #f6d3bd;
+$blush: #f3c9c4;
+$rose: #d98c97;
+$rose-deep: #b8606f;
+$sage: #a9bb98;
+$sage-deep: #6f8a5f;
+$marigold: #eb9a2a;
+$ink: #5a3e2b; // warm brown body text — never black
+$ink-soft: #7d6149;
+
+// ─── Type ───
+$font-serif: 'Cormorant Garamond', 'Times New Roman', serif;
+$font-script: 'Great Vibes', 'Cormorant Garamond', cursive;
+$font-caps: 'Cinzel', 'Cormorant Garamond', serif;
+$font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+$font-deva: 'Noto Serif Devanagari', 'Noto Serif Telugu', serif;
+
+// ─── Motion ───
+$ease-silk: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+// Warm paper grain as an inline SVG (rasterised once by the browser)
+$paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.26 0 0 0 0.11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+@mixin paper($base: $ivory) {
+  background-color: $base;
+  background-image: $paper-grain,
+    radial-gradient(120% 90% at 30% 10%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(120% 90% at 80% 100%, rgba(214, 180, 130, 0.18), transparent 60%);
+}
+
+@mixin gold-text {
+  color: $gold-deep;
+  background: linear-gradient(100deg, #a77a2f 0%, #d9b46a 30%, #f3dfa8 48%, #c49a4a 62%, #9c7330 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@mixin eyebrow {
+  font-family: $font-caps;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: $gold-deep;
+}
+
+@mixin section-shell {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(4.5rem, 14vw, 7rem) 1.25rem;
+}
+
+@mixin from($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}

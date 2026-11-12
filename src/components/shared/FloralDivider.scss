@@ -1,0 +1,24 @@
+.floral-divider {
+  position: relative;
+  z-index: 3;
+  height: 92px;
+  margin: -46px 0;
+  pointer-events: none;
+
+  &__swag {
+    position: absolute;
+    top: 6px;
+    left: 4%;
+    right: 4%;
+    transform-origin: 50% 0;
+  }
+
+  &__lotus {
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    width: 52px;
+    height: 36px;
+    margin-left: -26px;
+  }
+}

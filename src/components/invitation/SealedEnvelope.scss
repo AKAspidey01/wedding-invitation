@@ -1,0 +1,203 @@
+@use '../../styles/variables' as *;
+
+$flap-h: 64%;
+
+@mixin liner {
+  background-color: #f3cfc9;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(196, 154, 74, 0.6) 1.3px, transparent 1.7px),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.55) 1px, transparent 1.4px),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 7px, transparent 7px 14px),
+    linear-gradient(180deg, #f6d9d3, #eab9b5);
+  background-size: 16px 16px, 16px 16px, auto, auto;
+  background-position: 0 0, 8px 8px, 0 0, 0 0;
+}
+
+.env-back,
+.env-pocket,
+.env-flap,
+.env-flap-shadow {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+.env-back {
+  top: 0;
+  height: 100%;
+  z-index: 1;
+  border-radius: 4px;
+  @include paper(#f6ead6);
+  box-shadow:
+    0 50px 80px -30px rgba(120, 78, 36, 0.45),
+    0 14px 26px -12px rgba(120, 78, 36, 0.3),
+    inset 0 0 0 1px rgba(196, 154, 74, 0.35);
+
+  &__liner {
+    position: absolute;
+    inset: 3% 3% 40% 3%;
+    @include liner;
+    opacity: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 40%, 50% 92%, 0 40%);
+  }
+}
+
+.env-pocket {
+  top: 0;
+  height: 100%;
+  z-index: 3;
+  clip-path: polygon(0 30%, 50% 60%, 100% 30%, 100% 100%, 0 100%);
+  @include paper(#fbf3e4);
+  border-radius: 4px;
+  overflow: hidden;
+
+  &__folds {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__address {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 9%;
+    text-align: center;
+
+    span {
+      display: block;
+      font-family: $font-caps;
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: $gold-deep;
+    }
+
+    strong {
+      display: block;
+      font-family: $font-script;
+      font-weight: 400;
+      font-size: 2rem;
+      line-height: 1.3;
+      color: $rose-deep;
+    }
+  }
+}
+
+.env-sides {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+
+  &--l {
+    clip-path: polygon(0 0, 44.5% 56.6%, 0 30%);
+    background: $paper-grain, linear-gradient(100deg, #f5e8d2, #faf1e2);
+  }
+
+  &--r {
+    clip-path: polygon(100% 0, 55.5% 56.6%, 100% 30%);
+    background: $paper-grain, linear-gradient(260deg, #f3e5ce, #f9efdf);
+  }
+}
+
+.env-flap-shadow {
+  top: 0;
+  height: $flap-h;
+  z-index: 4;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, transparent 30%, rgba(110, 72, 34, 0.32));
+  transform: translateY(5px);
+  filter: blur(3px);
+}
+
+.env-flap {
+  top: 0;
+  height: $flap-h;
+  z-index: 5;
+  transform-origin: 50% 0%;
+
+  &__front,
+  &__back {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 100% 0, 53.5% 96%, 50% 100%, 46.5% 96%);
+  }
+
+  &__front {
+    @include paper(#fcf5e8);
+    background-image: $paper-grain, linear-gradient(180deg, #fffaf1 0%, #f7ead4 100%);
+
+    svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__back {
+    @include liner;
+    opacity: 0;
+  }
+
+  &.is-open &__front {
+    opacity: 0;
+  }
+  &.is-open &__back {
+    opacity: 1;
+  }
+}
+
+.paper-sheen {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 40%;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 252, 240, 0.7) 50%, transparent);
+  animation: sheen-sweep 6.5s $ease-silk infinite;
+  animation-delay: 1.2s;
+}
+
+.env-seal {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: calc(#{$flap-h} - 2%);
+  width: 27%;
+  aspect-ratio: 1;
+  margin: -13.5% 0 0 -13.5%; // % margins resolve against width → centred
+
+  &__half {
+    position: absolute;
+    inset: 0;
+    filter: drop-shadow(0 4px 5px rgba(95, 31, 48, 0.35));
+
+    .wax-seal {
+      width: 100%;
+      height: 100%;
+    }
+
+    &--l {
+      clip-path: polygon(0 0, 53% 0, 47% 18%, 55% 36%, 46% 54%, 54% 72%, 48% 100%, 0 100%);
+    }
+    &--r {
+      clip-path: polygon(53% 0, 100% 0, 100% 100%, 48% 100%, 54% 72%, 46% 54%, 55% 36%, 47% 18%);
+    }
+  }
+
+  &__ring {
+    position: absolute;
+    inset: -8%;
+    border-radius: 50%;
+    border: 1.5px solid rgba(217, 184, 119, 0.85);
+    animation: ring-pulse 2.6s $ease-silk infinite;
+
+    &--2 {
+      animation-delay: 1.3s;
+    }
+  }
+}

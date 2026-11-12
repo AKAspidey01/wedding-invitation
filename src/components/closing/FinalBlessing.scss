@@ -1,0 +1,188 @@
+@use '../../styles/variables' as *;
+
+.closing {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(6rem, 22vw, 9rem) 1.25rem calc(14rem + var(--safe-b));
+  text-align: center;
+  background:
+    radial-gradient(80% 40% at 50% 30%, #fffdf8 0%, rgba(255, 253, 248, 0) 70%),
+    radial-gradient(120% 50% at 50% 100%, #f8e1d3 0%, rgba(248, 225, 211, 0) 70%),
+    linear-gradient(180deg, #faf1e6 0%, #fdf8f0 40%, #fbf1e6 100%);
+
+  &__toran {
+    position: absolute;
+    top: 0;
+    left: -2%;
+    right: -2%;
+    z-index: 3;
+  }
+
+  &__mandala {
+    position: absolute;
+    left: 50%;
+    top: 26%;
+    --m: min(150vw, 900px);
+    width: var(--m);
+    height: var(--m);
+    margin: calc(var(--m) / -2) 0 0 calc(var(--m) / -2);
+    opacity: 0.22;
+    pointer-events: none;
+
+    .mandala {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__stage {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__flight {
+    width: min(88vw, 420px);
+  }
+
+  &__card {
+    height: auto;
+
+    .wcard__paper {
+      height: auto;
+    }
+
+    .wcard__content {
+      height: auto;
+      padding: 16cqw 11cqw 26cqw;
+    }
+
+    .wcard__invocation {
+      font-size: 5cqw;
+    }
+
+    .couple-names__name {
+      font-size: 15cqw;
+    }
+  }
+
+  &__kalash {
+    width: 15cqw;
+    height: 19cqw;
+    margin: 2cqw auto 0;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__blessing {
+    margin-top: 1cqw;
+    font-family: $font-serif;
+    font-style: italic;
+    font-size: 5cqw;
+    line-height: 1.45;
+    color: $ink;
+  }
+
+  &__families {
+    margin-top: 4cqw;
+    display: grid;
+    gap: 1cqw;
+
+    p {
+      font-family: $font-caps;
+      font-size: 3cqw;
+      letter-spacing: 0.16em;
+      color: $ink-soft;
+    }
+  }
+
+  &__thanks {
+    position: relative;
+    z-index: 6;
+    max-width: 30ch;
+    margin: 3.4rem auto 0;
+    display: grid;
+    gap: 1rem;
+
+    p {
+      font-family: $font-serif;
+      font-size: clamp(1.25rem, 5.4vw, 1.5rem);
+      line-height: 1.5;
+      color: $ink;
+    }
+  }
+
+  &__diyas {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1.4rem;
+    margin-top: 2.6rem;
+
+    .diya {
+      width: 46px;
+      height: 54px;
+    }
+
+    .diya:nth-child(2) {
+      width: 58px;
+      height: 68px;
+    }
+  }
+
+  &__signoff {
+    position: relative;
+    z-index: 6;
+    margin-top: 1.8rem;
+    @include eyebrow;
+  }
+
+  &__sign {
+    position: relative;
+    z-index: 6;
+    margin-top: 0.3rem;
+    font-family: $font-script;
+    font-size: clamp(2.8rem, 13vw, 3.8rem);
+    line-height: 1.2;
+    color: $rose-deep;
+
+    span {
+      font-family: $font-serif;
+      font-style: italic;
+      font-size: 0.6em;
+      @include gold-text;
+    }
+  }
+
+  &__end-flora {
+    position: absolute;
+    z-index: 5;
+    bottom: -3vw;
+    width: min(46vw, 280px);
+    height: min(46vw, 280px);
+
+    .floral-cluster {
+      width: 100%;
+      height: 100%;
+    }
+
+    &--l {
+      left: -6vw;
+      .floral-cluster {
+        transform: scaleY(-1);
+      }
+    }
+    &--r {
+      right: -6vw;
+      .floral-cluster {
+        transform: scale(-1, -1);
+      }
+    }
+  }
+}

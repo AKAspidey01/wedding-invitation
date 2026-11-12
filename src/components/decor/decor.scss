@@ -1,0 +1,54 @@
+@use '../../styles/variables' as *;
+
+.mandala,
+.floral-cluster,
+.floral-sprig,
+.toran,
+.diya,
+.kalash,
+.ornate-corner,
+.ornament-rule,
+.wax-seal,
+.garland-swag {
+  pointer-events: none;
+  overflow: visible;
+}
+
+.toran {
+  width: 100%;
+  height: auto;
+}
+
+.diya {
+  overflow: visible;
+
+  &__flame {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: flame-flicker 1.6s ease-in-out infinite;
+  }
+
+  &__glow {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: glow-pulse 2.8s ease-in-out infinite;
+  }
+}
+
+.bloom {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.ornament-rule {
+  display: block;
+  width: min(240px, 64vw);
+  height: auto;
+  margin: 0 auto;
+}
+
+.garland-swag {
+  display: block;
+  width: 100%;
+  height: auto;
+}

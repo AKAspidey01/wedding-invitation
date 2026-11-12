@@ -1,0 +1,276 @@
+@use '../../styles/variables' as *;
+
+.gallery {
+  @include section-shell;
+  padding-left: 0;
+  padding-right: 0;
+  background:
+    radial-gradient(80% 40% at 50% 60%, #fff9f2 0%, rgba(255, 249, 242, 0) 70%),
+    linear-gradient(180deg, #fdf9f3 0%, #fbefe6 55%, #faf1e6 100%);
+
+  --slide-w: min(68vw, 330px);
+
+  &__sprig {
+    position: absolute;
+    width: 44vw;
+    max-width: 260px;
+
+    &--l {
+      top: 0.25rem;
+      left: -16vw;
+      transform: rotate(-28deg);
+    }
+    &--r {
+      top: 0.25rem;
+      right: -16vw;
+      transform: rotate(28deg) scaleX(-1);
+    }
+  }
+
+  &__track {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 3vw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2rem calc(50% - var(--slide-w) / 2) 2.4rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__controls {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+  }
+
+  &__arrow {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: $gold-deep;
+    background: rgba(255, 251, 243, 0.9);
+    box-shadow: inset 0 0 0 1px rgba(196, 154, 74, 0.55), 0 8px 18px -10px rgba(120, 78, 36, 0.5);
+    transition: opacity 0.3s;
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  &__dots {
+    display: flex;
+
+    button {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 44px;
+    }
+
+    i {
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(196, 154, 74, 0.35);
+      transition: transform 0.4s $ease-silk, background 0.4s;
+    }
+
+    .is-active i {
+      background: $gold;
+      transform: scale(1.5);
+    }
+  }
+}
+
+.gslide {
+  flex: 0 0 var(--slide-w);
+  scroll-snap-align: center;
+  // 'normal' lets a flick glide with momentum and settle on a card,
+  // instead of slamming to a halt at the very next one.
+  scroll-snap-stop: normal;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+
+  &__frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    border-radius: 50% 50% 18px 18px / 34% 34% 18px 18px;
+    background: #f3e6d6;
+    box-shadow:
+      0 0 0 1.5px rgba(196, 154, 74, 0.9),
+      0 0 0 7px #fffaf1,
+      0 0 0 8px rgba(217, 184, 119, 0.7),
+      0 34px 50px -28px rgba(120, 78, 36, 0.6);
+  }
+
+  &__clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    -webkit-mask-image: -webkit-radial-gradient(white, black); // iOS overflow + radius fix
+  }
+
+  &__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.18);
+    // own GPU layer: the inner parallax moves without repainting the artwork
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  &__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background:
+      radial-gradient(80% 60% at 50% 35%, rgba(255, 255, 255, 0.7), transparent 70%),
+      linear-gradient(165deg, #fbe7df 0%, #f4d5cf 55%, #ecc6c2 100%);
+
+    .mandala {
+      position: absolute;
+      width: 130%;
+      opacity: 0.22;
+    }
+
+    svg:not(.mandala) {
+      position: relative;
+      width: 64px;
+    }
+
+    span {
+      position: relative;
+      font-family: $font-script;
+      font-size: 2rem;
+      color: $rose-deep;
+    }
+
+    small {
+      position: relative;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: $ink-soft;
+    }
+  }
+
+  &__caption {
+    margin-top: 1.1rem;
+    text-align: center;
+    font-family: $font-serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: $ink-soft;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  &.is-active &__caption {
+    opacity: 1;
+  }
+}
+
+/* ── Lightbox (light mode) ── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 4.5rem 1rem 5.5rem;
+  background: rgba(252, 247, 238, 0.94);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  perspective: 1200px;
+
+  &__figure {
+    margin: 0;
+    max-width: min(92vw, 720px);
+    touch-action: pan-y;
+    cursor: grab;
+
+    img {
+      max-height: 72vh;
+      width: auto;
+      margin: 0 auto;
+      border-radius: 14px;
+      box-shadow: 0 0 0 1.5px rgba(196, 154, 74, 0.8), 0 0 0 7px #fffaf1, 0 40px 70px -30px rgba(120, 78, 36, 0.55);
+      user-select: none;
+    }
+
+    figcaption {
+      margin-top: 1rem;
+      text-align: center;
+      font-family: $font-serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: $ink-soft;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 14px;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: $gold-deep;
+    background: #fffaf1;
+    box-shadow: inset 0 0 0 1px rgba(196, 154, 74, 0.6);
+  }
+
+  &__nav {
+    position: absolute;
+    bottom: calc(18px + var(--safe-b));
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: $font-caps;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: $gold-deep;
+
+    button {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fffaf1;
+      box-shadow: inset 0 0 0 1px rgba(196, 154, 74, 0.6);
+
+      &:disabled {
+        opacity: 0.35;
+      }
+    }
+  }
+}
