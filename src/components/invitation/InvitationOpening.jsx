@@ -3,7 +3,7 @@ import { gsap } from '../../lib/gsap';
 import { lockScroll, unlockScroll } from '../../lib/smoothScroll';
 import { prefersReducedMotion } from '../../lib/motion';
 import { audioEngine } from '../../lib/audioEngine';
-import { EnvelopeBack, EnvelopeFlap, EnvelopePocket, EnvelopeSeal } from './SealedEnvelope';
+import { EnvelopeBack, EnvelopeFlap, EnvelopePocket } from './SealedEnvelope';
 import WeddingCard, { CardDoors, addCardReveal } from './WeddingCard';
 import HeroBackdrop from './FloralDecorations';
 import { buildCardFlight, pinOpeningScene } from './CardScrollTransition';
@@ -57,7 +57,11 @@ export default function InvitationOpening() {
 
       /* ── Scene 1: the close-up ── */
       gsap.set(q('.io-scene'), { scale: 2.1, rotation: -6, xPercent: 7, yPercent: -14 });
-      gsap.set(q('.io-card'), { scale: 0.92, zIndex: 2 });
+      // While sealed, the card is effectively invisible (0.001 rather than
+      // hidden, so it's still pre-rendered). The envelope is built from separate
+      // paper pieces whose edges meet exactly; on some phones pixel rounding
+      // left hairline gaps where the pink card peeked through before opening.
+      gsap.set(q('.io-card'), { scale: 0.92, zIndex: 2, opacity: 0.001 });
       gsap.set(q('.env-pocket__address'), { autoAlpha: 0 });
       gsap.set(flap, { transformPerspective: 1100, transformOrigin: '50% 0%' });
       gsap.set(q('.door--l'), { transformPerspective: 1400, transformOrigin: '0% 50%' });
@@ -82,11 +86,9 @@ export default function InvitationOpening() {
 
       tl.to(q('.io-hint'), { autoAlpha: 0, y: 12, duration: 0.5, ease: 'power2.out' }, 0)
         .to(q('.env-seal__ring'), { autoAlpha: 0, duration: 0.25 }, 0)
-        // the wax seal cracks in two…
-        .to(q('.env-seal__half--l'), { x: -10, y: 4, rotation: -14, duration: 0.7, ease: 'power3.out' }, 0.15)
-        .to(q('.env-seal__half--r'), { x: 10, y: 6, rotation: 12, duration: 0.7, ease: 'power3.out' }, 0.15)
-        // …and drops away
-        .to(q('.env-seal'), { autoAlpha: 0, y: 30, scale: 0.85, duration: 0.6, ease: 'power2.in' }, 0.7)
+        // the wax seal (whole, monogram intact) lifts slightly as it's picked
+        // up — it's attached to the flap, so it then rides up with it
+        .to(q('.env-seal'), { y: -6, scale: 1.06, duration: 0.6, ease: 'power2.out' }, 0.15)
         // camera eases back to show the whole envelope
         .to(q('.io-scene'), { scale: 0.74, rotation: 0, xPercent: 0, yPercent: 0, y: () => vh() * 0.1, duration: 2.2, ease: 'power3.inOut' }, 0.25)
         .to(q('.io-mandala'), { scale: 1, autoAlpha: 0.26, duration: 2.6, ease: 'power2.inOut' }, 0.25)
@@ -104,6 +106,8 @@ export default function InvitationOpening() {
             }
           },
         }, 0.85)
+        // the card becomes visible as the flap starts to lift (still covered)
+        .set(q('.io-card'), { opacity: 1 }, 0.85)
         .to(q('.env-flap-shadow'), { autoAlpha: 0, duration: 0.5 }, 0.85)
         .to(q('.env-sides'), { autoAlpha: 0, duration: 0.45, ease: 'power1.in' }, 1.0)
         .to(q('.env-back__liner'), { opacity: 1, duration: 0.7 }, 1.05)
@@ -222,8 +226,8 @@ export default function InvitationOpening() {
                 <CardDoors />
               </div>
               <EnvelopePocket />
+              {/* the wax seal is part of the flap, so it lifts with it */}
               <EnvelopeFlap />
-              <EnvelopeSeal />
             </div>
           </div>
         </div>

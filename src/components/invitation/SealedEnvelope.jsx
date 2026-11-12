@@ -54,20 +54,20 @@ export function EnvelopeFlap() {
           <div className="paper-sheen" />
         </div>
         <div className="env-flap__back" />
+        {/* stuck to the flap's tip: lifts and folds back with the flap */}
+        <EnvelopeSeal />
       </div>
     </>
   );
 }
 
+/** The wax seal — one whole piece with the couple's monogram. */
 export function EnvelopeSeal() {
   return (
     <div className="env-seal">
       <span className="env-seal__ring" />
       <span className="env-seal__ring env-seal__ring--2" />
-      <div className="env-seal__half env-seal__half--l">
-        <WaxSeal />
-      </div>
-      <div className="env-seal__half env-seal__half--r">
+      <div className="env-seal__wax">
         <WaxSeal />
       </div>
     </div>

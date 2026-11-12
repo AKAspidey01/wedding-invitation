@@ -29,8 +29,7 @@ $flap-h: 64%;
 .env-sides,
 .env-flap-shadow,
 .env-back__liner,
-.env-pocket__address,
-.env-seal__half {
+.env-pocket__address {
   will-change: transform, opacity;
 }
 
@@ -162,6 +161,10 @@ $flap-h: 64%;
   &.is-open &__back {
     opacity: 1;
   }
+  // once folded back past vertical, the seal is on the outer side, facing away
+  &.is-open .env-seal {
+    visibility: hidden;
+  }
 }
 
 .paper-sheen {
@@ -176,16 +179,19 @@ $flap-h: 64%;
   animation-delay: 1.2s;
 }
 
+// The seal lives inside .env-flap (same width as the envelope, 64% of its
+// height), sitting over the flap's tip: 62% of the envelope = 96.875% of the flap.
 .env-seal {
   position: absolute;
-  z-index: 6;
+  z-index: 2;
   left: 50%;
-  top: calc(#{$flap-h} - 2%);
+  top: 96.875%;
   width: 27%;
   aspect-ratio: 1;
   margin: -13.5% 0 0 -13.5%; // % margins resolve against width → centred
+  transform-origin: 50% 50%;
 
-  &__half {
+  &__wax {
     position: absolute;
     inset: 0;
     filter: drop-shadow(0 4px 5px rgba(95, 31, 48, 0.35));
@@ -193,13 +199,6 @@ $flap-h: 64%;
     .wax-seal {
       width: 100%;
       height: 100%;
-    }
-
-    &--l {
-      clip-path: polygon(0 0, 53% 0, 47% 18%, 55% 36%, 46% 54%, 54% 72%, 48% 100%, 0 100%);
-    }
-    &--r {
-      clip-path: polygon(53% 0, 100% 0, 100% 100%, 48% 100%, 54% 72%, 46% 54%, 55% 36%, 47% 18%);
     }
   }
 
