@@ -2,16 +2,9 @@
 
 $flap-h: 64%;
 
-@mixin liner {
-  background-color: #f3cfc9;
-  background-image:
-    radial-gradient(circle at 50% 50%, rgba(196, 154, 74, 0.6) 1.3px, transparent 1.7px),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.55) 1px, transparent 1.4px),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 7px, transparent 7px 14px),
-    linear-gradient(180deg, #f6d9d3, #eab9b5);
-  background-size: 16px 16px, 16px 16px, auto, auto;
-  background-position: 0 0, 8px 8px, 0 0, 0 0;
-}
+// Shapes are drawn as SVG (see SealedEnvelope.jsx) — no clip-path, no filters,
+// and no per-piece GPU layers: those rendered inconsistently on some phones
+// (parts briefly visible/hidden) and used too much graphics memory.
 
 .env-back,
 .env-pocket,
@@ -20,17 +13,6 @@ $flap-h: 64%;
   position: absolute;
   left: 0;
   width: 100%;
-}
-
-// Parts that fade or move during the opening each get their own GPU layer:
-// otherwise every fade frame would repaint the whole (zoomed) envelope scene.
-.env-back,
-.env-pocket,
-.env-sides,
-.env-flap-shadow,
-.env-back__liner,
-.env-pocket__address {
-  will-change: transform, opacity;
 }
 
 .env-back {
@@ -44,12 +26,14 @@ $flap-h: 64%;
     0 14px 26px -12px rgba(120, 78, 36, 0.3),
     inset 0 0 0 1px rgba(196, 154, 74, 0.35);
 
+  // rose lining inside the envelope, revealed as the flap opens
   &__liner {
     position: absolute;
-    inset: 3% 3% 40% 3%;
-    @include liner;
+    left: 3%;
+    top: 3%;
+    width: 94%;
+    height: 57%;
     opacity: 0;
-    clip-path: polygon(0 0, 100% 0, 100% 40%, 50% 92%, 0 40%);
   }
 }
 
@@ -57,12 +41,9 @@ $flap-h: 64%;
   top: 0;
   height: 100%;
   z-index: 3;
-  clip-path: polygon(0 30%, 50% 60%, 100% 30%, 100% 100%, 0 100%);
-  @include paper(#fbf3e4);
-  border-radius: 4px;
-  overflow: hidden;
+  pointer-events: none;
 
-  &__folds {
+  &__paper {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -96,32 +77,22 @@ $flap-h: 64%;
   }
 }
 
+// both side flaps in one SVG covering the envelope
 .env-sides {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 3;
   pointer-events: none;
-
-  &--l {
-    clip-path: polygon(0 0, 44.5% 56.6%, 0 30%);
-    background: $paper-grain, linear-gradient(100deg, #f5e8d2, #faf1e2);
-  }
-
-  &--r {
-    clip-path: polygon(100% 0, 55.5% 56.6%, 100% 30%);
-    background: $paper-grain, linear-gradient(260deg, #f3e5ce, #f9efdf);
-  }
 }
 
 .env-flap-shadow {
   top: 0;
   height: $flap-h;
   z-index: 4;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  // soft edge comes from the gradient itself — a blur() filter here had to be
-  // re-computed on every frame while the camera zooms
-  background: linear-gradient(180deg, transparent 35%, rgba(110, 72, 34, 0.14) 70%, rgba(110, 72, 34, 0.26));
   transform: translateY(4px);
+  pointer-events: none;
 }
 
 .env-flap {
@@ -129,54 +100,35 @@ $flap-h: 64%;
   height: $flap-h;
   z-index: 5;
   transform-origin: 50% 0%;
-  will-change: transform; // folds back in 3D — rasterise once
+  // The flap and its two faces are drawn ahead of time on their own GPU
+  // layers (during the idle sealed screen). Drawing them only when the flap
+  // starts to swing — at the 2× close-up — froze the animation for ~1s.
+  will-change: transform;
 
   &__front,
   &__back {
     position: absolute;
     inset: 0;
-    clip-path: polygon(0 0, 100% 0, 53.5% 96%, 50% 100%, 46.5% 96%);
+    width: 100%;
+    height: 100%;
+    will-change: opacity;
   }
 
-  &__front {
-    @include paper(#fcf5e8);
-    background-image: $paper-grain, linear-gradient(180deg, #fffaf1 0%, #f7ead4 100%);
-
-    svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
+  // The inside (lining) shows once the flap has folded past vertical.
+  // 0.001 (not hidden) so it's pre-drawn and the swap costs nothing.
   &__back {
-    @include liner;
-    opacity: 0;
+    opacity: 0.001;
   }
-
   &.is-open &__front {
     opacity: 0;
   }
   &.is-open &__back {
     opacity: 1;
   }
-  // once folded back past vertical, the seal is on the outer side, facing away
+  // …and the seal is then on the outer side, facing away
   &.is-open .env-seal {
     visibility: hidden;
   }
-}
-
-.paper-sheen {
-  position: absolute;
-  top: -20%;
-  bottom: -20%;
-  left: 0;
-  width: 40%;
-  pointer-events: none;
-  background: linear-gradient(100deg, transparent, rgba(255, 252, 240, 0.7) 50%, transparent);
-  animation: sheen-sweep 6.5s $ease-silk infinite;
-  animation-delay: 1.2s;
 }
 
 // The seal lives inside .env-flap (same width as the envelope, 64% of its
@@ -191,10 +143,16 @@ $flap-h: 64%;
   margin: -13.5% 0 0 -13.5%; // % margins resolve against width → centred
   transform-origin: 50% 50%;
 
+  &__shadow {
+    position: absolute;
+    inset: 4% 2% -8% 4%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(95, 31, 48, 0.32), rgba(95, 31, 48, 0.12) 70%, rgba(95, 31, 48, 0));
+  }
+
   &__wax {
     position: absolute;
     inset: 0;
-    filter: drop-shadow(0 4px 5px rgba(95, 31, 48, 0.35));
 
     .wax-seal {
       width: 100%;

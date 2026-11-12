@@ -170,6 +170,9 @@
   margin: auto;
   width: var(--card-w);
   height: var(--card-h);
+  // Pre-drawn once on its own GPU layer during the sealed screen: it fades in,
+  // slides out and settles, all without re-drawing the zoomed envelope scene.
+  will-change: transform, opacity;
 }
 
 /* ── Tap hint ── */

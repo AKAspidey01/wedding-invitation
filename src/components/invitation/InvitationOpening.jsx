@@ -63,18 +63,22 @@ export default function InvitationOpening() {
       // left hairline gaps where the pink card peeked through before opening.
       gsap.set(q('.io-card'), { scale: 0.92, zIndex: 2, opacity: 0.001 });
       gsap.set(q('.env-pocket__address'), { autoAlpha: 0 });
-      gsap.set(flap, { transformPerspective: 1100, transformOrigin: '50% 0%' });
-      gsap.set(q('.door--l'), { transformPerspective: 1400, transformOrigin: '0% 50%' });
-      gsap.set(q('.door--r'), { transformPerspective: 1400, transformOrigin: '100% 50%' });
+      // (3D perspective is applied only when the flap/doors start to move — see
+      // the timeline. Set at load, it put the doors, card and pocket on extra
+      // GPU layers for the whole sealed screen: ~80 MB on a 3× phone screen.)
+      gsap.set(flap, { transformOrigin: '50% 0%' });
+      gsap.set(q('.door--l'), { transformOrigin: '0% 50%' });
+      gsap.set(q('.door--r'), { transformOrigin: '100% 50%' });
       gsap.set(q('.io-scroll-cue'), { autoAlpha: 0 });
       gsap.set(q('.io-toran'), { autoAlpha: 0 });
       // near-zero (not hidden) so the browser rasterises the bouquets during the
       // idle sealed screen instead of mid-animation
       gsap.set(q('.io-flora'), { opacity: 0.001 });
-      gsap.set(q('.io-mandala'), { scale: 1.4, autoAlpha: 0.12 });
-      // Keep the envelope/card scene on one pre-rasterised GPU layer
-      // (rasterised at the close-up scale, so it stays sharp as the camera
-      // pulls back and as the card later flies away on scroll).
+      // fades in only — zooming this large layer cost a lot of GPU memory
+      gsap.set(q('.io-mandala'), { autoAlpha: 0.12 });
+      // The envelope scene is ONE pre-rasterised GPU layer while the camera
+      // zooms out (drawn during the idle sealed screen, so the tap doesn't
+      // stall). Released once the camera settles — see the timeline.
       gsap.set(q('.io-scene'), { willChange: 'transform' });
 
       /* ── Scene 2: opening choreography (≈ 8s) ──
@@ -84,6 +88,9 @@ export default function InvitationOpening() {
       let flipped = false;
       const envParts = q('.env-back, .env-pocket, .env-flap, .env-flap-shadow');
 
+      // (Only the parts that move on their own are pre-drawn layers: the scene,
+      // card, flap and doors. Earlier, many more permanent layers ran some
+      // phones out of graphics memory — parts of the envelope/card flickered.)
       tl.to(q('.io-hint'), { autoAlpha: 0, y: 12, duration: 0.5, ease: 'power2.out' }, 0)
         .to(q('.env-seal__ring'), { autoAlpha: 0, duration: 0.25 }, 0)
         // the wax seal (whole, monogram intact) lifts slightly as it's picked
@@ -91,9 +98,10 @@ export default function InvitationOpening() {
         .to(q('.env-seal'), { y: -6, scale: 1.06, duration: 0.6, ease: 'power2.out' }, 0.15)
         // camera eases back to show the whole envelope
         .to(q('.io-scene'), { scale: 0.74, rotation: 0, xPercent: 0, yPercent: 0, y: () => vh() * 0.1, duration: 2.2, ease: 'power3.inOut' }, 0.25)
-        .to(q('.io-mandala'), { scale: 1, autoAlpha: 0.26, duration: 2.6, ease: 'power2.inOut' }, 0.25)
+        .to(q('.io-mandala'), { autoAlpha: 0.26, duration: 2.6, ease: 'power2.inOut' }, 0.25)
         .to(q('.env-pocket__address'), { autoAlpha: 1, duration: 0.9, ease: 'power1.out' }, 1.1)
         // the flap lifts and folds back
+        .set(flap, { transformPerspective: 1100 }, 0.84)
         .to(flap, {
           rotationX: 180,
           duration: 1.5,
@@ -119,12 +127,15 @@ export default function InvitationOpening() {
         .to(envParts, { y: () => vh() * 0.95, rotation: 3, autoAlpha: 0, duration: 1.25, ease: 'power2.in' }, 3.35)
         .to(q('.io-scene'), { scale: 1, y: 0, duration: 1.4, ease: 'power3.inOut' }, 3.4)
         .to(q('.io-card'), { yPercent: 0, scale: 1, duration: 1.4, ease: 'power3.inOut' }, 3.4)
+        // camera has settled — release the scene layer (see above)
+        .set(q('.io-scene'), { willChange: 'auto' }, 4.8)
         // florals and toran arrive at different speeds (depth); each bouquet
         // blooms in as a whole so the GPU moves it without repainting
         .fromTo(q('.io-flora--tl'), { xPercent: -45, yPercent: -25, rotation: -16 }, { xPercent: 0, yPercent: 0, rotation: 0, autoAlpha: 1, duration: 1.8, ease: 'power3.out' }, 3.9)
         .fromTo(q('.io-flora--br'), { xPercent: 45, yPercent: 25, rotation: 16 }, { xPercent: 0, yPercent: 0, rotation: 0, autoAlpha: 1, duration: 1.8, ease: 'power3.out' }, 4.0)
         .fromTo(q('.io-toran'), { yPercent: -100 }, { yPercent: 0, autoAlpha: 1, duration: 1.3, ease: 'power3.out' }, 4.2)
         // gate-fold doors part like temple doors
+        .set(q('.door'), { transformPerspective: 1400, backfaceVisibility: 'hidden' }, 4.59)
         .to(q('.door--l'), { rotationY: -118, duration: 1.7, ease: 'power3.inOut' }, 4.6)
         .to(q('.door--r'), { rotationY: 118, duration: 1.7, ease: 'power3.inOut' }, 4.6)
         .to(q('.door'), { autoAlpha: 0, duration: 0.6, ease: 'power1.in' }, 5.4);

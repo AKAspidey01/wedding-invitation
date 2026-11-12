@@ -149,9 +149,10 @@
     width: 45%;
     z-index: 6;
     pointer-events: none;
-    background: linear-gradient(100deg, transparent, rgba(255, 248, 225, 0.65) 50%, transparent);
+    // plain translucent highlight — a blend mode here rendered as a hard
+    // light band on some phones once the card was on a moving layer
+    background: linear-gradient(100deg, transparent, rgba(255, 251, 238, 0.45) 50%, transparent);
     transform: translateX(-130%) skewX(-18deg);
-    mix-blend-mode: soft-light;
   }
 
   &__invocation {
@@ -234,6 +235,16 @@
   will-change: transform;
 }
 
+// …except on the opening card: it sits inside the zoomed envelope scene, where
+// extra permanent layers (rasterised at the 2× close-up) used too much graphics
+// memory on some phones. GSAP layers them only while they animate.
+.wcard--hero {
+  .wcard__flora,
+  .wcard__watermark {
+    will-change: auto;
+  }
+}
+
 /* ───────── Couple names ───────── */
 .couple-names {
   display: flex;
@@ -297,8 +308,10 @@
   top: 0;
   bottom: 0;
   width: 50%;
-  backface-visibility: hidden;
-  will-change: transform; // swings open in 3D — rasterise the door art once
+  // Pre-drawn on their own layers during the sealed screen, so the swing
+  // starts instantly (drawing them at that moment stalled the animation).
+  // backface-visibility and 3D perspective are applied by GSAP at the swing.
+  will-change: transform;
 
   &--l {
     left: 0;
