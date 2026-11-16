@@ -31,28 +31,44 @@ export const weddingConfig = {
   },
 
   /**
-   * Exactly two events. Times are 24h "HH:mm" in the timezone above.
-   * `date` is "YYYY-MM-DD" — leave null until confirmed.
+   * The events, in the order they happen. Times are 24h "HH:mm" in the
+   * timezone above; `date` is the real calendar date "YYYY-MM-DD".
+   *   onwards  — show the time as "7:00 PM onwards"
+   *   nightOf  — the event falls in the small hours after this evening, so
+   *              it is shown as "early morning" (the night of that date)
    */
   events: [
     {
-      id: 'marriage',
-      day: 1,
-      title: 'Marriage',
-      tagline: 'Sumuhurtham',
-      date: null, // ⟵ PLACEHOLDER  e.g. '2027-02-14'
-      time: '22:20', // 10:20 PM (provided)
-      motif: 'kalash',
-    },
-    {
-      id: 'reception',
-      day: 2,
-      title: 'Reception',
-      tagline: 'Blessings & Celebration',
-      date: null, // ⟵ PLACEHOLDER
-      time: '22:30', // 10:30 PM (provided)
+      id: 'dinner',
+      title: 'Wedding Dinner',
+      tagline: 'Feast & Festivities',
+      date: '2026-12-02', // Wednesday night
+      time: '19:00', // 7:00 PM onwards
+      onwards: true,
       motif: 'diya',
     },
+    {
+      id: 'marriage',
+      title: 'Marriage',
+      tagline: 'Sumuhurtham',
+      // Muhurtham: the night of 2 December, i.e. 4:45 AM on 3 December.
+      // date + time are the exact moment (the countdown counts down to it).
+      date: '2026-12-03',
+      time: '04:45',
+      nightOf: '2026-12-02',
+      motif: 'kalash',
+    },
+    /* Reception — hidden for now. Uncomment (and set its date) to show it
+       again on the card, venue, and event sections.
+    {
+      id: 'reception',
+      title: 'Reception',
+      tagline: 'Blessings & Celebration',
+      date: null,
+      time: '22:30', // 10:30 PM
+      motif: 'diya',
+    },
+    */
   ],
 
   /** The countdown counts down to this event's date + time. */
@@ -166,6 +182,20 @@ export function formatDate(date, opts = {}) {
     timeZone: weddingConfig.timezone.iana,
     ...opts,
   }).format(d);
+}
+
+/** Pieces for a calendar badge: "2026-12-02" → { month: 'Dec', day: '02' }. */
+export function dateBadge(date) {
+  if (!date) return null;
+  const d = new Date(`${date}T12:00:00${weddingConfig.timezone.offset}`);
+  const fmt = (o) => new Intl.DateTimeFormat('en-IN', { ...o, timeZone: weddingConfig.timezone.iana }).format(d);
+  return { month: fmt({ month: 'short' }), day: fmt({ day: '2-digit' }) };
+}
+
+/** Machine-readable moment for <time dateTime>, e.g. "2026-12-03T04:45+05:30". */
+export function eventDateTime(event) {
+  if (!event?.date || !event?.time) return undefined;
+  return `${event.date}T${event.time}${weddingConfig.timezone.offset}`;
 }
 
 /** Absolute epoch ms for an event, or null if its date is not set. */

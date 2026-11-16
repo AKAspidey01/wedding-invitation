@@ -156,6 +156,16 @@
     svg {
       color: $gold;
     }
+
+    small {
+      align-self: flex-end;
+      margin-bottom: 0.45rem;
+      font-size: 1.05rem;
+      font-weight: 500;
+      font-style: italic;
+      color: $ink-soft;
+      text-shadow: none;
+    }
   }
 
   &__date {
@@ -163,6 +173,14 @@
     font-family: $font-serif;
     font-size: 1.1rem;
     color: $ink-soft;
+  }
+
+  &__note {
+    margin-top: 0.15rem;
+    font-family: $font-serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: $rose-deep;
   }
 
   &__venue {

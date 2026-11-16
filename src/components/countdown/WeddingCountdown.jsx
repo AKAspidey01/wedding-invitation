@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { Fragment, memo, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { weddingConfig, getEvent, eventTimestamp, formatDate, formatTime } from '../../data/weddingConfig';
 import { useCountdown } from '../../hooks/useCountdown';
@@ -70,7 +70,18 @@ export default function WeddingCountdown() {
   let note;
   if (unset) note = 'The auspicious date will be announced soon';
   else if (status === 'arrived') note = 'The auspicious moment has arrived — thank you for your blessings';
-  else note = `${event.title} · ${formatDate(event.date)} · ${formatTime(event.time)} ${tz}`;
+  else {
+    // e.g. "Sumuhurtham · Thursday, 3 December 2026 · 4:45 AM IST (early morning)";
+    // each piece stays on one line so the note wraps between pieces only
+    const early = event.nightOf ? ' (early morning)' : '';
+    const parts = [event.tagline || event.title, formatDate(event.date), `${formatTime(event.time)} ${tz}${early}`];
+    note = parts.map((p, i) => (
+      <Fragment key={i}>
+        {i > 0 && ' · '}
+        <span style={{ whiteSpace: 'nowrap' }}>{p}</span>
+      </Fragment>
+    ));
+  }
 
   return (
     <section ref={ref} className="countdown" aria-labelledby="countdown-title">

@@ -213,6 +213,19 @@
       font-weight: 600;
       font-size: 5.2cqw;
       color: $ink;
+
+      small {
+        font-size: 0.6em;
+        font-weight: 500;
+        font-style: italic;
+        color: $ink-soft;
+      }
+    }
+
+    em {
+      font-family: $font-serif;
+      font-size: 2.7cqw;
+      color: $ink-soft;
     }
   }
 

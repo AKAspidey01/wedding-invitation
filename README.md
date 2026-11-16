@@ -16,7 +16,8 @@ npm run preview
 | What | Key |
 | --- | --- |
 | Names | `couple.bride.name`, `couple.groom.name`, `couple.displayOrder` |
-| Event dates (drive the countdown) | `events[].date` as `'YYYY-MM-DD'` (times are already 22:20 / 22:30 IST) |
+| Events | `events[]` — `date` `'YYYY-MM-DD'`, `time` `'HH:mm'` IST, optional `onwards` and `nightOf` (Reception is commented out there) |
+| Countdown target | `countdownEventId` (the Muhurtham: 3 Dec 2026, 4:45 AM IST) |
 | Venue | `venue.name`, `venue.city`, `venue.address`, `venue.coordinates` `{ lat, lng }` |
 | Banquet hall photo | put the file in `public/images/venue/`, set `venue.backgroundImage` (+ optional `backgroundImageWebp`) |
 | Music | put an MP3 in `public/audio/`, set `music.src` (until then a soft synthesised Raga Mohanam plays) |

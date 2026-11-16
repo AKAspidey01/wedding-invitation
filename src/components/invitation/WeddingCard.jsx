@@ -73,7 +73,11 @@ export default function WeddingCard() {
         {events.map((e) => (
           <li key={e.id} className="r-detail">
             <span>{e.title}</span>
-            <b>{formatTime(e.time)}</b>
+            <b>
+              {formatTime(e.time)}
+              {e.onwards && <small> onwards</small>}
+            </b>
+            {e.nightOf && <em>Early morning, {formatDate(e.date, { weekday: undefined, year: undefined, month: 'short' })}</em>}
           </li>
         ))}
       </ul>

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Clock } from 'lucide-react';
-import { weddingConfig, formatTime, formatDate } from '../../data/weddingConfig';
+import { weddingConfig, formatTime, formatDate, dateBadge, eventDateTime } from '../../data/weddingConfig';
 import { useSectionReveal, useScrollScene } from '../../hooks/useScrollAnimation';
 import { gsap } from '../../lib/gsap';
 import SectionHeading from '../shared/SectionHeading';
@@ -8,7 +8,7 @@ import { FloralCluster } from '../decor/Flowers';
 import { Diya, Kalash, OrnamentRule, Toran } from '../decor/Ornaments';
 import './WeddingEvents.scss';
 
-/** SECTION 4 — exactly two event cards: Marriage and Reception. */
+/** SECTION 4 — event cards: Wedding Dinner and Marriage (Reception is hidden in the config). */
 export default function WeddingEvents() {
   const ref = useRef(null);
   const events = weddingConfig.events.slice(0, 2);
@@ -50,7 +50,7 @@ export default function WeddingEvents() {
 
   return (
     <section ref={ref} className="events" aria-labelledby="events-title">
-      <SectionHeading id="events-title" script="Wedding Celebrations" eyebrow="Two days of togetherness" />
+      <SectionHeading id="events-title" script="Wedding Celebrations" eyebrow="One auspicious night" />
 
       <div className="events__list">
         {events.map((e, i) => (
@@ -59,19 +59,27 @@ export default function WeddingEvents() {
               <div className="event-card__toran">
                 <Toran count={7} />
               </div>
-              <div className="event-card__day ev-reveal">
-                <small>Day</small>
-                <span>{String(e.day).padStart(2, '0')}</span>
-              </div>
+              {e.date && (
+                <div className="event-card__day ev-reveal">
+                  <small>{dateBadge(e.date).month}</small>
+                  <span>{dateBadge(e.date).day}</span>
+                </div>
+              )}
               <div className="event-card__motif ev-reveal">{e.motif === 'diya' ? <Diya /> : <Kalash />}</div>
               <h3 className="event-card__title ev-reveal">{e.title}</h3>
               {e.tagline && <p className="event-card__tagline ev-reveal">{e.tagline}</p>}
               <OrnamentRule className="event-card__rule ev-reveal" />
               <p className="event-card__time ev-reveal">
                 <Clock size={18} strokeWidth={1.5} aria-hidden="true" />
-                <time>{formatTime(e.time)}</time>
+                <time dateTime={eventDateTime(e)}>{formatTime(e.time)}</time>
+                {e.onwards && <small>onwards</small>}
               </p>
               {e.date && <p className="event-card__date ev-reveal">{formatDate(e.date)}</p>}
+              {e.nightOf && (
+                <p className="event-card__note ev-reveal">
+                  Early morning · the night of {formatDate(e.nightOf, { year: undefined })}
+                </p>
+              )}
               <p className="event-card__venue ev-reveal">{weddingConfig.venue.name}</p>
               <div className="event-card__flora event-card__flora--l" aria-hidden="true">
                 <FloralCluster />

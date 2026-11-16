@@ -76,8 +76,12 @@ export default function VenueSection() {
           {events.map((e) => (
             <li key={e.id} className="venue__reveal">
               <span>{e.title}</span>
-              <strong>{formatTime(e.time)}</strong>
+              <strong>
+                {formatTime(e.time)}
+                {e.onwards && <small> onwards</small>}
+              </strong>
               {e.date && <em>{formatDate(e.date, { weekday: undefined })}</em>}
+              {e.nightOf && <em>early morning</em>}
             </li>
           ))}
         </ul>

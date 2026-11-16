@@ -132,6 +132,13 @@
       font-weight: 600;
       font-size: clamp(1.6rem, 7vw, 2.1rem);
       color: $rose-deep;
+
+      small {
+        font-size: 0.55em;
+        font-weight: 500;
+        font-style: italic;
+        color: $ink-soft;
+      }
     }
 
     em {
