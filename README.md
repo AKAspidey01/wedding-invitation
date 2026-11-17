@@ -20,7 +20,7 @@ npm run preview
 | Countdown target | `countdownEventId` (the Muhurtham: 3 Dec 2026, 4:45 AM IST) |
 | Venue | `venue.name`, `venue.city`, `venue.address`, `venue.coordinates` `{ lat, lng }` |
 | Banquet hall photo | put the file in `public/images/venue/`, set `venue.backgroundImage` (+ optional `backgroundImageWebp`) |
-| Music | MP3 in `public/audio/`, listed in `music.tracks` (the first one plays); its `credit` is printed at the end of the page. Now: Bach's "Jesu, Joy" by Kevin MacLeod, CC BY 4.0 |
+| Music | MP3 in `public/audio/`, listed in `music.tracks` (the first one plays); `credit` records the attribution (not shown on the page). Now: Bach's "Jesu, Joy" by Kevin MacLeod, CC BY 4.0 |
 | Gallery | put photos in `public/images/gallery/`, set each `gallery[].src` |
 | Blessing / thank-you / families | `invitationCard`, `closing` (Telugu invocation alternative is in a comment) |
 

@@ -104,8 +104,8 @@ export const weddingConfig = {
     /**
      * Background music (file in /public/audio/). Starts on the first tap.
      * The FIRST track in the list is the one that plays.
-     * `credit` is shown in small print at the end of the page (the
-     * Creative Commons licence asks for it).
+     * `credit` records the licence attribution (CC BY 4.0 asks for a
+     * visible credit; it is not currently shown on the page).
      */
     tracks: [
       // Bach's "Jesu, Joy" — piano, bells & harp (chosen 17 Nov 2026)

@@ -2,7 +2,6 @@ import { useSyncExternalStore } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 import { audioEngine } from '../../lib/audioEngine';
-import { musicTracks } from '../../data/weddingConfig';
 import './MusicControl.scss';
 
 /** Discreet floating music toggle — appears once the music has started. */
@@ -48,10 +47,4 @@ export default function MusicControl() {
       )}
     </AnimatePresence>
   );
-}
-
-/** Small-print credit for the background music (required by CC BY). */
-export function MusicCredit({ className = '' }) {
-  const credit = musicTracks()[0]?.credit;
-  return credit ? <p className={className}>Music: {credit}</p> : null;
 }

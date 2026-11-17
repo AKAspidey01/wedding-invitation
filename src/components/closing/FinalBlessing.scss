@@ -177,19 +177,6 @@
     }
   }
 
-  // music attribution (required by the track's CC BY licence) — small print
-  &__credit {
-    position: relative;
-    z-index: 6;
-    max-width: 30ch;
-    margin: 2.6rem auto 0;
-    font-size: 0.68rem;
-    line-height: 1.5;
-    letter-spacing: 0.02em;
-    color: $ink-soft;
-    opacity: 0.75;
-  }
-
   &__end-flora {
     position: absolute;
     z-index: 5;
