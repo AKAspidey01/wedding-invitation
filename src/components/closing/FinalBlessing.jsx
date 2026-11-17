@@ -6,6 +6,7 @@ import { CardFrame, CoupleNames, addCardReveal } from '../invitation/WeddingCard
 import { Diya, Kalash, Mandala, OrnamentRule, Toran } from '../decor/Ornaments';
 import { FloralCluster } from '../decor/Flowers';
 import FloatingPetals from '../animations/FloatingPetals';
+import { MusicCredit } from '../shared/MusicControl';
 import './FinalBlessing.scss';
 
 /**
@@ -127,6 +128,7 @@ export default function FinalBlessing() {
       <p className="closing__sign">
         {a} <span>&amp;</span> {b}
       </p>
+      <MusicCredit className="closing__credit" />
 
       <div className="closing__end-flora closing__end-flora--l" aria-hidden="true">
         <FloralCluster />

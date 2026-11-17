@@ -1,21 +1,24 @@
-import { weddingConfig } from '../data/weddingConfig';
+import { weddingConfig, musicTracks } from '../data/weddingConfig';
 
 /**
  * Background music engine.
  *  • Must be started from a user gesture (mobile autoplay rules).
  *  • Uses a Web Audio gain node for fades — iOS ignores <audio>.volume.
- *  • Plays the configured file; if none is set (or it fails), it
- *    synthesises a soft santoor + tanpura melody in Raga Mohanam.
+ *  • Plays the first track from config.music.tracks (optionally
+ *    synthesises a Raga Mohanam melody when there is none).
  *  • Music lives outside React, so section changes never restart it.
  */
 
 const cfg = weddingConfig.music;
+const tracks = musicTracks();
 const listeners = new Set();
 let state = { started: false, playing: false, available: true };
 
 let ctx = null;
 let master = null;
 let audioEl = null;
+let mediaNode = null;
+let onAudioError = null;
 let synth = null;
 let userMuted = false;
 
@@ -32,24 +35,41 @@ function fadeTo(value, seconds) {
   master.gain.linearRampToValueAtTime(value, now + seconds);
 }
 
-function startFile() {
-  audioEl = new Audio();
-  audioEl.src = cfg.src;
-  audioEl.loop = true;
-  audioEl.preload = 'auto';
-  audioEl.playsInline = true;
-  audioEl.addEventListener('error', () => {
-    // File missing or unsupported → fall back to the synthesised melody.
-    audioEl = null;
+/** Stop and release the current file (and its download). */
+function stopFile() {
+  if (!audioEl) return;
+  // detach first: clearing the src fires an 'error' event
+  audioEl.removeEventListener('error', onAudioError);
+  audioEl.pause();
+  mediaNode?.disconnect();
+  audioEl.removeAttribute('src');
+  audioEl.load();
+  audioEl = null;
+  mediaNode = null;
+}
+
+function startFile(index) {
+  const el = new Audio();
+  el.src = tracks[index].src;
+  el.loop = true;
+  el.preload = 'auto';
+  el.playsInline = true;
+  onAudioError = () => {
+    if (el !== audioEl) return;
+    // File missing or unsupported → optional synth, otherwise silence.
+    stopFile();
     if (cfg.synthFallback && ctx) startSynth();
     else emit({ available: false, playing: false });
-  });
+  };
+  el.addEventListener('error', onAudioError);
   if (ctx) {
-    ctx.createMediaElementSource(audioEl).connect(master);
+    mediaNode = ctx.createMediaElementSource(el);
+    mediaNode.connect(master);
   } else {
-    audioEl.volume = cfg.volume;
+    el.volume = cfg.volume;
   }
-  audioEl.play().catch(() => {});
+  audioEl = el;
+  el.play().catch(() => {});
 }
 
 let synthStarted = false;
@@ -77,7 +97,7 @@ function ensureContext() {
   master.gain.value = 0;
   master.connect(ctx.destination);
   // build the synth graph (reverb impulse etc.) ahead of time too
-  if (!cfg.src && cfg.synthFallback) synth = createRagaSynth(ctx, master);
+  if (!tracks.length && cfg.synthFallback) synth = createRagaSynth(ctx, master);
 }
 
 export const audioEngine = {
@@ -111,7 +131,7 @@ export const audioEngine = {
     if (ctx) ctx.resume?.();
     else ctx = null;
 
-    if (cfg.src) startFile();
+    if (tracks.length) startFile(0);
     else if (cfg.synthFallback && ctx) startSynth();
     else {
       emit({ available: false });

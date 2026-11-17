@@ -102,16 +102,21 @@ export const weddingConfig = {
 
   music: {
     /**
-     * Background instrumental, e.g. '/audio/wedding-music.mp3'
-     * (place the file in /public/audio/). Starts on the first tap.
+     * Background music (file in /public/audio/). Starts on the first tap.
+     * The FIRST track in the list is the one that plays.
+     * `credit` is shown in small print at the end of the page (the
+     * Creative Commons licence asks for it).
      */
-    src: null,
+    tracks: [
+      // Bach's "Jesu, Joy" — piano, bells & harp (chosen 17 Nov 2026)
+      { src: '/audio/wedding-music.mp3', credit: '“Jesu, Joy of Man’s Desiring” by Kevin MacLeod (incompetech.com) · CC BY 4.0' },
+    ],
     volume: 0.45,
     /**
-     * When no file is configured (or it fails to load), play a gentle
-     * synthesised santoor-and-tanpura melody in Raga Mohanam instead.
+     * Play the old synthesised Raga Mohanam melody when no track is listed
+     * or a file fails to load. Off: silence is better than a dull fallback.
      */
-    synthFallback: true,
+    synthFallback: false,
   },
 
   /**
@@ -152,6 +157,9 @@ export const weddingConfig = {
 };
 
 /* ───────────────── derived helpers ───────────────── */
+
+/** Music tracks that have a file set (comment-outs and nulls skipped). */
+export const musicTracks = () => (weddingConfig.music.tracks || []).filter((t) => t && t.src);
 
 export const orderedNames = () =>
   weddingConfig.couple.displayOrder.map((k) => weddingConfig.couple[k].name);
